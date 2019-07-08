@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poly.toba.mapper.NoticeMapper">
+<select id="getList" resultType="NoticeDTO">
+	SELECT 
+		*
+	FROM
+		NOTICE
+</select>
+<select id="getNoticeDetail" parameterType="NoticeDTO" resultType="NoticeDTO">
+	SELECT
+		*
+	FROM
+		NOTICE
+	WHERE noticeNo = #{noticeNo}
+</select>
+</mapper>
