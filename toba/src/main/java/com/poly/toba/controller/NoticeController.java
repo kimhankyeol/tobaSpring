@@ -28,7 +28,7 @@ public class NoticeController {
 	@Autowired
 	private ICommonService noticeService;
 	
-	//전체조회
+	//전체조회 -- 바뀐부분--
 	@GetMapping("/list")
 	public ResponseEntity<List<NoticeDTO>> getNoticeList() throws Exception{
 		List<NoticeDTO> nList = new ArrayList<>();
