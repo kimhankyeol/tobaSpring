@@ -17,5 +17,13 @@
 	WHERE
 		noticeNo = #{noticeNo};
 </select>
-
+<!-- 조회수 -->
+<update id="noticeUpdateCount" parameterType="NoticeDTO">
+	UPDATE 
+		NOTICE
+	SET
+		noticeReadcount = noticeReadcount+1
+	WHERE
+		noticeNo = #{noticeNo}
+</update>
 </mapper>

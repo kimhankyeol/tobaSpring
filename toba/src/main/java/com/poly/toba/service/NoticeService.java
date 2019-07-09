@@ -24,7 +24,15 @@ public class NoticeService implements ICommonService<NoticeDTO>{
 	@Override
 	public NoticeDTO getDetail(NoticeDTO t) throws Exception {
 		// TODO Auto-generated method stub
+	
 		return noticeMapper.getNoticeDetail(t);
+	}
+	//조회수
+	@Override
+	public int noticeUpdateCount(NoticeDTO nDTO) throws Exception {
+		// TODO Auto-generated method stub
+		return noticeMapper.noticeUpdateCount(nDTO);
+		
 	}
 	
 	

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.poly.toba.mapper.CommentMapper">
+<select id="getCommentList" parameterType="CommentDTO" resultType="CommentDTO">
+	SELECT 
+		*
+	FROM
+		COMMENT
+	WHERE
+		noticeNo = #{noticeNo} 
+	ORDER BY commentRegdate DESC
+</select>
+<insert id="insertComment" parameterType="CommentDTO" >
+	INSERT INTO
+		COMMENT
+		(
+			commentContent,
+			commentRegdate,
+			noticeNo,
+			userNo,
+			commentWriter
+		)
+		VALUES
+		(
+			#{commentContent},
+			now(),
+			#{noticeNo},
+			#{userNo},
+			#{commentWriter}
+		)
+</insert>
+</mapper>

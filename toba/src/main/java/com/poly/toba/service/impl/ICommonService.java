@@ -11,6 +11,9 @@ public interface ICommonService<T> {
 	//공지사항 단일 조회
 	public T getDetail(T t) throws Exception;
 	
+	//조회수
+	public int noticeUpdateCount(NoticeDTO nDTO) throws Exception;
+	
 //	//등록
 //	public int boardAdd(T t) throws Exception;
 //	

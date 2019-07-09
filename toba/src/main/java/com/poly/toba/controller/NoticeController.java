@@ -44,7 +44,8 @@ public class NoticeController {
 		HashMap<String,Object> hMap = new HashMap<>();
 		nDTO.setNoticeNo(noticeNo);
 		nDTO = (NoticeDTO) noticeService.getDetail(nDTO);
-		
+		//조회수
+		int result =noticeService.noticeUpdateCount(nDTO);
 		hMap.put("nDTO",nDTO);
 		hMap.put("noticeTotalCount", noticeService.getList().size());
 		String prev,next;

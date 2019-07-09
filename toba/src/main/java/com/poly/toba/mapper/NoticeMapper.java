@@ -12,4 +12,6 @@ public interface NoticeMapper {
 	public List<NoticeDTO> getList() throws Exception;
 	//공지사항 단일조회
 	public NoticeDTO getNoticeDetail(NoticeDTO t) throws Exception;
+	//조회수
+	public int noticeUpdateCount(NoticeDTO nDTO) throws Exception;
 }
