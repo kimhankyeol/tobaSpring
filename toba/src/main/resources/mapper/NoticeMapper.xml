@@ -9,9 +9,13 @@
 </select>
 <select id="getNoticeDetail" parameterType="NoticeDTO" resultType="NoticeDTO">
 	SELECT
-		*
-	FROM
+		*,
+		(SELECT noticeNo FROM NOTICE WHERE <![CDATA[noticeNo < #{noticeNo}]]>  ORDER BY noticeNo DESC LIMIT 1) AS noticePrev,
+		(SELECT noticeNo FROM NOTICE WHERE <![CDATA[noticeNo > #{noticeNo}]]>   ORDER BY noticeNo LIMIT 1) AS noticeNext
+	FROM 
 		NOTICE
-	WHERE noticeNo = #{noticeNo}
+	WHERE
+		noticeNo = #{noticeNo};
 </select>
+
 </mapper>

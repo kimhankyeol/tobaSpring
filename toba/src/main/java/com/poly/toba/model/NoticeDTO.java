@@ -12,4 +12,6 @@ public class NoticeDTO {
 	private String noticeContent;
 	private String noticeRegdate;
 	private String noticeWriter;
+	private String noticePrev;
+	private String noticeNext;
 }
