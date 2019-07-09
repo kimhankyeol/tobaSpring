@@ -1,14 +1,19 @@
 package com.poly.toba.model;
 
+import org.apache.ibatis.type.Alias;
+
 import lombok.Data;
 
 @Data
+@Alias("UserDTO")
 public class UserDTO {
 	private String userNo;
-	private String userId;
+	private String userEmail;
 	private String userPassword;
 	private String userNickName;
-	private String userRegDate;
 	private String userName;
-	private String userEmail;
+	private String userRegDate;
+	private String userProfilePath;
+	private String userProfileName;
+	private String userProfileNameOrin;
 }
