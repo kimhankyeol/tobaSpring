@@ -56,6 +56,7 @@ public class UserController {
 	public ResponseEntity<String> userRegister(@RequestBody UserDTO uDTO) throws Exception{
 		//비밀번호 암호화 해야함
 		if(uDTO.getUserEmail() == null) {
+			System.out.println("test");
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		} else {
 			int result = userService.regUser(uDTO);
