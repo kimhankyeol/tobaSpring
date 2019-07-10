@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.quiztok.demo.mapper.UserMapper">
-
+<mapper namespace="com.poly.toba.mapper.UserMapper">
+	<!-- 회원가입 -->
+	<insert id="regUser" parameterType="UserDTO">
+		INSERT INTO USER (
+			USEREMAIL,
+			USERPASSWORD,
+			USERNICKNAME,
+			USERNAME,
+			USERREGDATE
+		) VALUES (
+			#{userEmail},
+			#{userPassword},
+			#{userNickName},
+			#{userName},
+			NOW()
+		)
+	</insert>
+	<!-- 중복확인 -->
+	<select id="getUserEmailCheck" parameterType="string" resultType="int">
+		SELECT COUNT(*)
+		FROM USER
+		WHERE USEREMAIL=#{userEmail}
+	</select>
+	<select id="getUserNickCheck" parameterType="string" resultType="int">
+		SELECT COUNT(*)
+		FROM USER
+		WHERE USERNICKNAME=#{userNick}
+	</select>
 </mapper>
 
