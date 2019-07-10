@@ -8,13 +8,15 @@
 			USERPASSWORD,
 			USERNICKNAME,
 			USERNAME,
-			USERREGDATE
+			USERREGDATE,
+			USERAUTHSTATUS
 		) VALUES (
 			#{userEmail},
 			#{userPassword},
 			#{userNickName},
 			#{userName},
-			NOW()
+			NOW(),
+			0
 		)
 	</insert>
 	<!-- 중복확인 -->
@@ -27,6 +29,25 @@
 		SELECT COUNT(*)
 		FROM USER
 		WHERE USERNICKNAME=#{userNick}
+	</select>
+	<!-- 인증키 발급 -->
+	<insert id="regKey" parameterType="EmailDTO">
+		INSERT INTO EMAIL_CONFIRM (
+			emailKey,
+			userEmail,
+			userRegDate,
+			expiredDate
+		) VALUES (
+			#{emailKey},
+			#{userEmail},
+			NOW(),
+			DATE_ADD(NOW(), INTERVAL 1 SECOND)
+		)
+	</insert>
+	<select id="getEmailKey" parameterType="string" resultType="int">
+		SELECT COUNT(*)
+		FROM EMAIL_CONFIRM
+		WHERE EMAILKEY=#{emailKey}
 	</select>
 </mapper>
 

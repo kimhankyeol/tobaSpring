@@ -1,5 +1,8 @@
 package com.poly.toba.service.impl;
 
+import java.util.HashMap;
+
+import com.poly.toba.model.EmailDTO;
 import com.poly.toba.model.UserDTO;
 
 public interface IUserService {
@@ -8,5 +11,8 @@ public interface IUserService {
 	// 회원가입 중복체크
 	public int getUserEmailCheck(String userEmail) throws Exception;
 	public int getUserNickCheck(String userNick) throws Exception;
-	
+	// 인증번호 발급
+	public int regKey(EmailDTO eDTO) throws Exception;
+	public UserDTO getUserAuth(UserDTO uDTO) throws Exception;
+	public int getEmailKey(String emailKey) throws Exception; 
 }

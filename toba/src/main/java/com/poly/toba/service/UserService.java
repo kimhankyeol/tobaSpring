@@ -1,13 +1,13 @@
 package com.poly.toba.service;
 
-import java.util.List;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.poly.toba.mapper.UserMapper;
+import com.poly.toba.model.EmailDTO;
 import com.poly.toba.model.UserDTO;
-import com.poly.toba.service.impl.ICommonService;
 import com.poly.toba.service.impl.IUserService;
 
 @Service
@@ -28,5 +28,20 @@ public class UserService implements IUserService{
 	public int getUserNickCheck(String userNick) throws Exception {
 		return userMapper.getUserNickCheck(userNick);
 	}
-
+	// 인증번호 발급
+	@Override
+	public int regKey(EmailDTO eDTO) throws Exception {
+		return userMapper.regKey(eDTO);
+	}
+	@Override
+	public UserDTO getUserAuth(UserDTO uDTO) throws Exception {
+		long random = (long)(Math.random() * 900000001) + 100000001;
+		String authNum = Long.toHexString(random);
+		uDTO.setUserAuthKey(authNum);
+		return uDTO;
+	}
+	@Override
+	public int getEmailKey(String emailKey) throws Exception {
+		return userMapper.getEmailKey(emailKey);
+	}
 }

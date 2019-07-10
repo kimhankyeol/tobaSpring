@@ -16,4 +16,6 @@ public class UserDTO {
 	private String userProfilePath;
 	private String userProfileName;
 	private String userProfileNameOrin;
+	private String userAuthStatus;
+	private String userAuthKey;
 }
