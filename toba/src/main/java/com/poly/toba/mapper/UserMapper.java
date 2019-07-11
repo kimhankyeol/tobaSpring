@@ -15,4 +15,5 @@ public interface UserMapper {
 	// 인증키 발급
 	public int regKey(EmailDTO eDTO) throws Exception;
 	public int getEmailKey(String emailKey) throws Exception;
+	public int changeStatus(EmailDTO eDTO) throws Exception;
 }

@@ -14,5 +14,6 @@ public interface IUserService {
 	// 인증번호 발급
 	public int regKey(EmailDTO eDTO) throws Exception;
 	public UserDTO getUserAuth(UserDTO uDTO) throws Exception;
-	public int getEmailKey(String emailKey) throws Exception; 
+	public int getEmailKey(String emailKey) throws Exception;
+	public int changeStatus(EmailDTO eDTO) throws Exception;
 }

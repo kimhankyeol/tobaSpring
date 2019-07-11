@@ -49,5 +49,11 @@
 		FROM EMAIL_CONFIRM
 		WHERE EMAILKEY=#{emailKey}
 	</select>
+	<update id="changeStatus" parameterType="EmailDTO">
+	UPDATE user u INNER JOIN email_confirm e
+	ON u.userEmail = e.userEmail
+	SET u.userAuthStatus = 1
+	WHERE e.emailKey = #{emailKey};
+	</update>
 </mapper>
 

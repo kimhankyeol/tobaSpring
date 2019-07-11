@@ -44,4 +44,8 @@ public class UserService implements IUserService{
 	public int getEmailKey(String emailKey) throws Exception {
 		return userMapper.getEmailKey(emailKey);
 	}
+	@Override
+	public int changeStatus(EmailDTO eDTO) throws Exception {
+		return userMapper.changeStatus(eDTO);
+	}
 }

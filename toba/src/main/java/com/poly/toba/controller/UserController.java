@@ -54,6 +54,18 @@ public class UserController {
 			return new ResponseEntity<String>("0", HttpStatus.OK);
 		}
 	}
+	@PostMapping("/changeStatus")
+	public ResponseEntity<String> changeStatus(@RequestBody EmailDTO eDTO) throws Exception {
+		System.out.println("Status 변경");
+		if(eDTO.getEmailKey() == null) {
+			System.out.println("실패 1");
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		} else {
+			int result = userService.changeStatus(eDTO);
+			System.out.println("성공");
+			return new ResponseEntity<String>(HttpStatus.OK);
+		}
+	}
 	@PostMapping("/register")
 	public ResponseEntity<String> userRegister(@RequestBody UserDTO uDTO) throws Exception{
 		System.out.println("가입 시작");
@@ -98,4 +110,5 @@ public class UserController {
 			return new ResponseEntity<String>("0", HttpStatus.OK);
 		}
 	}
+	
 }
