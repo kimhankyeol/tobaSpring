@@ -55,5 +55,16 @@
 	SET u.userAuthStatus = 1
 	WHERE e.emailKey = #{emailKey};
 	</update>
+	<select id="getUserLogin" parameterType="UserDTO" resultType="UserDTO">
+	SELECT
+		USERNO AS userNo,
+		USEREMAIL AS userEmail,
+		USERNICKNAME AS userNickName,
+		USERNAME AS userName,
+		USERREGDATE AS userRegDate,
+		USERAUTHSTATUS AS userAuthStatus
+	FROM USER
+	WHERE USEREMAIL=#{userEmail} AND USERPASSWORD=#{userPassword} AND USERAUTHSTATUS=1
+	</select>
 </mapper>
 

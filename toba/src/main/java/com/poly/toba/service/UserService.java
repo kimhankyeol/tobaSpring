@@ -48,4 +48,8 @@ public class UserService implements IUserService{
 	public int changeStatus(EmailDTO eDTO) throws Exception {
 		return userMapper.changeStatus(eDTO);
 	}
+	@Override
+	public UserDTO getUserLogin(UserDTO uDTO) throws Exception {
+		return userMapper.getUserLogin(uDTO);
+	}
 }

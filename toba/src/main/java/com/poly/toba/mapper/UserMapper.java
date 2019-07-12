@@ -16,4 +16,6 @@ public interface UserMapper {
 	public int regKey(EmailDTO eDTO) throws Exception;
 	public int getEmailKey(String emailKey) throws Exception;
 	public int changeStatus(EmailDTO eDTO) throws Exception;
+	
+	public UserDTO getUserLogin(UserDTO uDTO) throws Exception;
 }

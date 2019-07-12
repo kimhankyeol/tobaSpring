@@ -1,6 +1,7 @@
 package com.poly.toba.controller;
 
-import java.util.HashMap;
+
+import javax.servlet.http.HttpSession;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,5 +111,25 @@ public class UserController {
 			return new ResponseEntity<String>("0", HttpStatus.OK);
 		}
 	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<String> login(@RequestBody UserDTO uDTO, HttpSession session) throws Exception { 
+		System.out.println(this.getClass() +" 로그인 시작"); 
+		if(uDTO.getUserEmail() == null) {
+			System.out.println(this.getClass() + " 로그인 실패"); 
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		} else { 
+			uDTO = userService.getUserLogin(uDTO);
+			if(uDTO == null) {
+				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+			} else {
+				session.setAttribute("userEmail", uDTO.getUserEmail());
+				session.setAttribute("userName", uDTO.getUserPassword());
+				System.out.println(session);
+				return new ResponseEntity<String>(HttpStatus.OK);
+			}
+		} 
+	}
+	
 	
 }
