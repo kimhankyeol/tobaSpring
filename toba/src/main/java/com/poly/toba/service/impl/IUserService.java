@@ -16,6 +16,6 @@ public interface IUserService {
 	public UserDTO getUserAuth(UserDTO uDTO) throws Exception;
 	public int getEmailKey(String emailKey) throws Exception;
 	public int changeStatus(EmailDTO eDTO) throws Exception;
-	
+	// 로그인
 	public UserDTO getUserLogin(UserDTO uDTO) throws Exception;
 }

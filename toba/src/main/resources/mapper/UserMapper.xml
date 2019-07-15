@@ -9,7 +9,7 @@
 			USERNICKNAME,
 			USERNAME,
 			USERREGDATE,
-			USERAUTHSTATUS
+			ENABLED
 		) VALUES (
 			#{userEmail},
 			#{userPassword},
@@ -52,9 +52,10 @@
 	<update id="changeStatus" parameterType="EmailDTO">
 	UPDATE user u INNER JOIN email_confirm e
 	ON u.userEmail = e.userEmail
-	SET u.userAuthStatus = 1
+	SET u.enabled = 1
 	WHERE e.emailKey = #{emailKey};
 	</update>
+	<!-- Login -->
 	<select id="getUserLogin" parameterType="UserDTO" resultType="UserDTO">
 	SELECT
 		USERNO AS userNo,
@@ -62,9 +63,9 @@
 		USERNICKNAME AS userNickName,
 		USERNAME AS userName,
 		USERREGDATE AS userRegDate,
-		USERAUTHSTATUS AS userAuthStatus
+		ENABLED AS enabled
 	FROM USER
-	WHERE USEREMAIL=#{userEmail} AND USERPASSWORD=#{userPassword} AND USERAUTHSTATUS=1
+	WHERE USEREMAIL=#{userEmail} AND USERPASSWORD=#{userPassword} AND ENABLED=1
 	</select>
 </mapper>
 

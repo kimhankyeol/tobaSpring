@@ -1,6 +1,7 @@
 package com.poly.toba.controller;
 
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.mybatis.spring.annotation.MapperScan;
@@ -113,23 +114,15 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody UserDTO uDTO, HttpSession session) throws Exception { 
-		System.out.println(this.getClass() +" 로그인 시작"); 
-		if(uDTO.getUserEmail() == null) {
+	public ResponseEntity<UserDTO> login(@RequestBody UserDTO uDTO, HttpSession session, 
+										HttpServletResponse res) throws Exception { 
+		System.out.println(this.getClass() +" 로그인 시작");
+		uDTO = userService.getUserLogin(uDTO);
+		if(uDTO == null) {
 			System.out.println(this.getClass() + " 로그인 실패"); 
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-		} else { 
-			uDTO = userService.getUserLogin(uDTO);
-			if(uDTO == null) {
-				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-			} else {
-				session.setAttribute("userEmail", uDTO.getUserEmail());
-				session.setAttribute("userName", uDTO.getUserPassword());
-				System.out.println(session);
-				return new ResponseEntity<String>(HttpStatus.OK);
-			}
-		} 
+			return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
+		} else {
+			return new ResponseEntity<UserDTO>(uDTO, HttpStatus.OK);
+		}
 	}
-	
-	
 }
