@@ -21,6 +21,7 @@ import com.poly.toba.model.UserDTO;
 import com.poly.toba.service.impl.IUserService;
 import com.poly.toba.util.Email;
 import com.poly.toba.util.EmailSender;
+import com.poly.toba.util.SecurityUtil;
 import com.poly.toba.util.TempKey;
 @SpringBootApplication
 @MapperScan(basePackages = "com.poly.toba")
@@ -68,6 +69,7 @@ public class UserController {
 			return new ResponseEntity<String>(HttpStatus.OK);
 		}
 	}
+	
 	@PostMapping("/register")
 	public ResponseEntity<String> userRegister(@RequestBody UserDTO uDTO) throws Exception{
 		System.out.println("가입 시작");
@@ -76,6 +78,11 @@ public class UserController {
 			System.out.println("test");
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		} else {
+			// 비밀번호 암호화
+			String password = uDTO.getUserPassword();
+			SecurityUtil securityUtil = new SecurityUtil();
+			String newPassword = securityUtil.encryptSHA256(password);
+			uDTO.setUserPassword(newPassword);
 			// 회원가입
 			int result = userService.regUser(uDTO);
 			System.out.println("가입됨");
@@ -115,8 +122,11 @@ public class UserController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<UserDTO> login(@RequestBody UserDTO uDTO, HttpSession session, 
-										HttpServletResponse res) throws Exception { 
-		System.out.println(this.getClass() +" 로그인 시작");
+										HttpServletResponse res) throws Exception {
+		String password = uDTO.getUserPassword();
+		SecurityUtil securityUtil = new SecurityUtil();
+		String newPassword = securityUtil.encryptSHA256(password);
+		uDTO.setUserPassword(newPassword);
 		uDTO = userService.getUserLogin(uDTO);
 		if(uDTO == null) {
 			System.out.println(this.getClass() + " 로그인 실패"); 
@@ -125,4 +135,34 @@ public class UserController {
 			return new ResponseEntity<UserDTO>(uDTO, HttpStatus.OK);
 		}
 	}
+	
+	@PostMapping("/mypageEnter")
+	public ResponseEntity<UserDTO> mypageEnter(@RequestBody UserDTO uDTO) throws Exception {
+		String password = uDTO.getUserPassword();
+		SecurityUtil securityUtil = new SecurityUtil();
+		String newPassword = securityUtil.encryptSHA256(password);
+		uDTO.setUserPassword(newPassword);
+		uDTO = userService.getUserLogin(uDTO);
+		if(uDTO == null) {
+			return new ResponseEntity<UserDTO>(uDTO, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<UserDTO>(uDTO, HttpStatus.OK);
+		}
+	}
+	
+	@PostMapping("/changePw")
+	public ResponseEntity<String> changePw(@RequestBody UserDTO uDTO) throws Exception {
+		String password = uDTO.getUserPassword();
+		if(uDTO.getUserPassword() == null) {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		} else {
+			SecurityUtil securityUtil = new SecurityUtil();
+			String newPassword = securityUtil.encryptSHA256(password);
+			uDTO.setUserPassword(newPassword);
+			int result = userService.updatePassword(uDTO);
+			System.out.println(result);
+			return new ResponseEntity<String>(HttpStatus.OK);
+		}
+	}
+	
 }

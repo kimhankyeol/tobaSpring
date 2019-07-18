@@ -1,5 +1,6 @@
 package com.poly.toba.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -16,11 +17,7 @@ public class NoticeService implements ICommonService<NoticeDTO>{
 
 	@Autowired
 	private NoticeMapper noticeMapper;
-	@Override
-	public List<NoticeDTO> getList() throws Exception {
-		// TODO Auto-generated method stub
-		return noticeMapper.getList();
-	}
+	
 	@Override
 	public NoticeDTO getDetail(NoticeDTO t) throws Exception {
 		// TODO Auto-generated method stub
@@ -33,6 +30,20 @@ public class NoticeService implements ICommonService<NoticeDTO>{
 		// TODO Auto-generated method stub
 		return noticeMapper.noticeUpdateCount(nDTO);
 		
+	}
+	
+	//페이징//////////////////////////////////////////////////
+	//게시물 총개수
+	@Override
+	public int noticeTotalCount() throws Exception {
+		// TODO Auto-generated method stub
+		return noticeMapper.noticeTotalCount();
+	}
+	//게시물 리스트
+	@Override
+	public List<NoticeDTO> getNoticeList(HashMap<String, Integer> hMap) throws Exception {
+		// TODO Auto-generated method stub
+		return noticeMapper.getNoticeList(hMap);
 	}
 	
 	

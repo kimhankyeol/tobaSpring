@@ -1,5 +1,6 @@
 package com.poly.toba.mapper;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -8,10 +9,17 @@ import com.poly.toba.model.NoticeDTO;
 
 @Mapper
 public interface NoticeMapper {
-	//전체조회
-	public List<NoticeDTO> getList() throws Exception;
-	//공지사항 단일조회
+
+	// 공지사항 단일조회
 	public NoticeDTO getNoticeDetail(NoticeDTO t) throws Exception;
-	//조회수
+
+	// 조회수
 	public int noticeUpdateCount(NoticeDTO nDTO) throws Exception;
+
+	// 페이징 /////////////////////////////
+	// 게시물 총 개수
+	public int noticeTotalCount() throws Exception;
+
+	// 게시물 리스트
+	public List<NoticeDTO> getNoticeList(HashMap<String, Integer> hMap) throws Exception;
 }

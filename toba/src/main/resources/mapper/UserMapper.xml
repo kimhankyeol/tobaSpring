@@ -67,5 +67,11 @@
 	FROM USER
 	WHERE USEREMAIL=#{userEmail} AND USERPASSWORD=#{userPassword} AND ENABLED=1
 	</select>
+	<!-- 비밀번호 변경 -->
+	<update id="updatePassword" parameterType="UserDTO">
+	UPDATE USER
+	SET USERPASSWORD=#{userPassword}
+	WHERE USEREMAIL=#{userEmail} AND ENABLED=1
+	</update>
 </mapper>
 

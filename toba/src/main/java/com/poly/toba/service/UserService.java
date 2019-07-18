@@ -54,4 +54,9 @@ public class UserService implements IUserService{
 	public UserDTO getUserLogin(UserDTO uDTO) throws Exception {
 		return userMapper.getUserLogin(uDTO);
 	}
+	// 비밀번호 변경
+	@Override
+	public int updatePassword(UserDTO uDTO) throws Exception {
+		return userMapper.updatePassword(uDTO);
+	}
 }
