@@ -39,11 +39,41 @@ public class NoticeService implements ICommonService<NoticeDTO>{
 		// TODO Auto-generated method stub
 		return noticeMapper.noticeTotalCount();
 	}
+	@Override
+	public int noticeSearchTitleTotalCount(HashMap<String, Object> hMap) throws Exception {
+		// TODO Auto-generated method stub
+		return noticeMapper.noticeSearchTitleTotalCount(hMap);
+	}
+	@Override
+	public int noticeSearchContentTotalCount(HashMap<String, Object> hMap) throws Exception {
+		// TODO Auto-generated method stub
+		return noticeMapper.noticeSearchContentTotalCount(hMap);
+	}
+	@Override
+	public int noticeSearchContentWriterCount(HashMap<String, Object> hMap) throws Exception {
+		// TODO Auto-generated method stub
+		return noticeMapper.noticeSearchWriterTotalCount(hMap);
+	}
 	//게시물 리스트
 	@Override
 	public List<NoticeDTO> getNoticeList(HashMap<String, Integer> hMap) throws Exception {
 		// TODO Auto-generated method stub
 		return noticeMapper.getNoticeList(hMap);
+	}
+	@Override
+	public List<NoticeDTO> getNoticeSearchTitleList(HashMap<String, Object> hMap) throws Exception {
+		// TODO Auto-generated method stub
+		return noticeMapper.getNoticeSearchTitleList(hMap);
+	}
+	@Override
+	public List<NoticeDTO> getNoticeSearchContentList(HashMap<String, Object> hMap) throws Exception {
+		// TODO Auto-generated method stub
+		return noticeMapper.getNoticeSearchContentList(hMap);
+	}
+	@Override
+	public List<NoticeDTO> getNoticeSearchWriterList(HashMap<String, Object> hMap) throws Exception {
+		// TODO Auto-generated method stub
+		return noticeMapper.getNoticeSearchWriterList(hMap);
 	}
 	
 	

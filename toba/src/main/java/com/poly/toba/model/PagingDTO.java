@@ -12,12 +12,13 @@ public class PagingDTO {
 	private int lastblock;//마지막페이지블록
 	
 //	 //검색하기 위한 변수
-//	 private String searchWord;
-//	 private String selBox;
+	 private String searchWord;
+	 private String searchCategory;
 //	 
 //	 //1대1문의 검색 변수
 //	 private String classfication;
 //	 
+	 
 	 
 	
 	public void prevnext(int pagenum) {
@@ -34,6 +35,22 @@ public class PagingDTO {
 		}
 	}
 	
+	public String getSearchWord() {
+		return searchWord;
+	}
+
+	public void setSearchWord(String searchWord) {
+		this.searchWord = searchWord;
+	}
+
+	public String getSearchCategory() {
+		return searchCategory;
+	}
+
+	public void setSearchCategory(String searchCategory) {
+		this.searchCategory = searchCategory;
+	}
+
 	public int calcpage(int totalcount,int contentnum) {// 전체 페이지 수를 계산하는 함수
 		//125/10 = > 12.5
 		//13페이지
