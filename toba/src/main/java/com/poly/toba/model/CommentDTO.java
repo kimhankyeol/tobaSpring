@@ -13,4 +13,5 @@ public class CommentDTO {
 	private String noticeNo;
 	private String commentWriter;
 	private String userNo;
+	private String likeUpCnt;
 }

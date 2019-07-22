@@ -1,32 +1,140 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.poly.toba.mapper.CommentMapper">
-<select id="getCommentList" parameterType="CommentDTO" resultType="CommentDTO">
-	SELECT 
-		*
-	FROM
-		COMMENT
-	WHERE
-		noticeNo = #{noticeNo} 
-	ORDER BY commentRegdate DESC
-</select>
-<insert id="insertComment" parameterType="CommentDTO" >
+	<select id="getCommentList" parameterType="map" resultType="CommentDTO">
+		SELECT 
+			*
+		FROM
+			COMMENT
+		WHERE
+			noticeNo = #{noticeNo} 
+		ORDER BY commentNo desc 
+		limit #{pagenum},#{contentnum}
+	</select>
+	<select id="commentListTotalCount" parameterType="CommentDTO" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(*)
+		FROM
+			COMMENT
+		WHERE
+			noticeNo = #{noticeNo} 
+	</select>
+	<insert id="insertComment" parameterType="CommentDTO" >
+		INSERT INTO
+			COMMENT
+			(
+				commentContent,
+				commentRegdate,
+				noticeNo,
+				userNo,
+				commentWriter
+			)
+			VALUES
+			(
+				#{commentContent},
+				now(),
+				#{noticeNo},
+				#{userNo},
+				#{commentWriter}
+			)
+	</insert>
+	<select id="recommentListTotalCount" parameterType="map" resultType="java.lang.Integer" >
+		SELECT 
+			COUNT(*)
+		FROM
+			RECOMMENT
+		WHERE
+			noticeNo = #{noticeNo} AND commentNo = #{commentNo}
+	</select>
+	<select id="getRecommentList" parameterType="map" resultType="RecommentDTO">
+		SELECT 
+			*
+		FROM
+			RECOMMENT
+		WHERE
+			noticeNo = #{noticeNo} and commentNo = #{commentno}
+		ORDER BY recommentNo desc 
+		limit #{pagenum},#{contentnum}
+	</select>
+	<insert id="insertRecomment"  parameterType="RecommentDTO">
 	INSERT INTO
-		COMMENT
-		(
-			commentContent,
-			commentRegdate,
-			noticeNo,
+			RECOMMENT
+			(
+				recommentContent,
+				recommentRegdate,
+				noticeNo,
+				userNo,
+				recommentWriter,
+				commentNo
+			)
+			VALUES
+			(
+				#{recommentContent},
+				now(),
+				#{noticeNo},
+				#{userNo},
+				#{recommentWriter},
+				#{commentNo}
+			)
+	</insert>
+	<delete id="deleteComment" parameterType="string">
+	DELETE
+		FROM COMMENT
+	WHERE commentNo = #{commentNo}
+	</delete>
+	<delete id="deleteRecomment" parameterType="string">
+	DELETE
+		FROM RECOMMENT
+	WHERE commentNo = #{commentNo}
+	</delete>
+	<delete id="deleteRecommentSel" parameterType="string">
+	DELETE
+		FROM RECOMMENT
+	WHERE recommentNo = #{recommentNo}
+	</delete>
+	<select id="likeCheck" parameterType="LikeDTO" resultType="LikeDTO">
+	SELECT * 
+	FROM LIKEUP
+	WHERE commentNo = #{commentNo} AND userNo = #{userNo} AND noticeNo = #{noticeNo} AND likeCheck= #{likeCheck}
+	</select>
+	<insert id="likeUp" parameterType="LikeDTO">
+	INSERT 
+		INTO LIKEUP
+			(
 			userNo,
-			commentWriter
-		)
+			noticeNo,
+			commentNo,
+			likeCheck
+			)
 		VALUES
-		(
-			#{commentContent},
-			now(),
-			#{noticeNo},
+			(
 			#{userNo},
-			#{commentWriter}
-		)
-</insert>
+			#{noticeNo},
+			#{commentNo},
+			#{likeCheck}
+			)
+	</insert>
+	<delete id="likeDown" parameterType="LikeDTO">
+	DELETE
+		FROM LIKEUP
+	WHERE  userNo = #{userNo} AND commentNo=#{commentNo} AND noticeNo = #{noticeNo}
+	</delete>
+	<select id="likeCommentCount" parameterType="LikeDTO" resultType="java.lang.Integer">
+	SELECT COUNT(*) 
+	FROM LIKEUP
+	WHERE commentNo = #{commentNo} AND noticeNo = #{noticeNo} AND likeCheck= #{likeCheck}
+	</select>
+	<!-- 페이징별 좋아요 개수 -->
+	<select id="pagingLikeCnt" parameterType="map" resultType="CommentDTO">
+	SELECT *
+	FROM(
+	  SELECT commentNo,COUNT(1) likeUpCnt,userNo
+	  FROM LIKEUP
+	  GROUP BY commentNo
+	  having commentNo IN 
+	  <foreach collection="cLikeList" item="item"  index="index" open="(" close=")" separator=",">
+	           #{item}
+	  </foreach> 
+	 )LIKEUP
+	</select> 
 </mapper>

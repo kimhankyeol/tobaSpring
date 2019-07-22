@@ -1,5 +1,6 @@
 package com.poly.toba.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.poly.toba.mapper.CommentMapper;
 import com.poly.toba.model.CommentDTO;
+import com.poly.toba.model.LikeDTO;
+import com.poly.toba.model.RecommentDTO;
 import com.poly.toba.service.impl.ICommentService;
 
 @Service
@@ -16,9 +19,9 @@ public class CommentService implements ICommentService{
 	private CommentMapper commentMapper;
 
 	@Override
-	public List<CommentDTO> getCommentList(CommentDTO cDTO) throws Exception {
+	public List<CommentDTO> getCommentList(HashMap<String, Object> hMap) throws Exception {
 		// TODO Auto-generated method stub
-		return commentMapper.getCommentList(cDTO);
+		return commentMapper.getCommentList(hMap);
 	}
 
 	@Override
@@ -26,6 +29,73 @@ public class CommentService implements ICommentService{
 		// TODO Auto-generated method stub
 		return commentMapper.insertComment(cDTO);
 	}
-	
+
+
+	@Override
+	public int commentListTotalCount(CommentDTO cDTO) throws Exception {
+		// TODO Auto-generated method stub
+		return commentMapper.commentListTotalCount(cDTO);
+	}
+
+	@Override
+	public int recommentListTotalCount(RecommentDTO recDTO) throws Exception {
+		// TODO Auto-generated method stub
+		return commentMapper.recommentListTotalCount(recDTO);
+	}
+
+	@Override
+	public List<RecommentDTO> getRecommentList(HashMap<String, Object> hMap) throws Exception {
+		// TODO Auto-generated method stub
+		return commentMapper.getRecommentList(hMap);
+	}
+
+	@Override
+	public int insertRecomment(RecommentDTO recDTO) throws Exception {
+		// TODO Auto-generated method stub
+		return commentMapper.insertRecomment(recDTO);
+	}
+
+	@Override
+	public int deleteComment(String commentNo) throws Exception {
+		// TODO Auto-generated method stub
+		commentMapper.deleteRecomment(commentNo);
+		return commentMapper.deleteComment(commentNo);
+	}
+
+	@Override
+	public int deleteRecommentSel(String recommentNo) throws Exception {
+		// TODO Auto-generated method stub
+		return commentMapper.deleteRecommentSel(recommentNo);
+	}
+
+	@Override
+	public LikeDTO likeCheck(LikeDTO likeDTO) throws Exception {
+		// TODO Auto-generated method stub
+		return commentMapper.likeCheck(likeDTO);
+	}
+
+	@Override
+	public int likeUp(LikeDTO likeDTO) throws Exception {
+		// TODO Auto-generated method stub
+		return commentMapper.likeUp(likeDTO);
+	}
+
+	@Override
+	public int likeDown(LikeDTO likeDTO) throws Exception {
+		// TODO Auto-generated method stub
+		return commentMapper.likeDown(likeDTO);
+	}
+
+	@Override
+	public int likeCommentCount(LikeDTO likeDTO) throws Exception {
+		// TODO Auto-generated method stub
+		return commentMapper.likeCommentCount(likeDTO);
+	}
+
+	@Override
+	public List<CommentDTO> pagingLikeCnt(HashMap<String, Object> hMap) throws Exception {
+		// TODO Auto-generated method stub
+		return commentMapper.pagingLikeCnt(hMap);
+	}
 
 }

@@ -75,7 +75,10 @@ public class NoticeService implements ICommonService<NoticeDTO>{
 		// TODO Auto-generated method stub
 		return noticeMapper.getNoticeSearchWriterList(hMap);
 	}
-	
+	@Override
+	   public int noticeReg(NoticeDTO nDTO) throws Exception {
+	      return noticeMapper.noticeReg(nDTO);
+	   }
 	
 
 }

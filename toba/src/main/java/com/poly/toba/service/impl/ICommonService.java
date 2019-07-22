@@ -29,9 +29,8 @@ public interface ICommonService<T> {
 	public List<NoticeDTO> getNoticeSearchTitleList(HashMap<String, Object> hMap) throws Exception;
 	public List<NoticeDTO> getNoticeSearchContentList(HashMap<String, Object> hMap) throws Exception;
 	public List<NoticeDTO> getNoticeSearchWriterList(HashMap<String, Object> hMap) throws Exception;
-
-
-	
+	// 등록
+	 public int noticeReg(NoticeDTO nDTO) throws Exception;
 
 	
 	

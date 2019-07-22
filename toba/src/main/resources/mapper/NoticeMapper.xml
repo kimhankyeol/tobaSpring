@@ -67,4 +67,19 @@
 	ORDER BY noticeNo desc 
 	limit #{pagenum},#{contentnum}
 </select>
+<insert id="noticeReg" parameterType="NoticeDTO">
+   INSERT INTO NOTICE (
+      NOTICETITLE,
+      NOTICECONTENT,
+      NOTICEREGDATE,
+      NOTICEWRITER,
+      NOTICEREADCOUNT
+   ) VALUES (
+      #{noticeTitle},
+      #{noticeContent},
+      NOW(),
+      #{noticeWriter},
+      0
+   )
+</insert>
 </mapper>

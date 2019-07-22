@@ -19,34 +19,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.toba.model.CommentDTO;
-import com.poly.toba.model.LikeDTO;
 import com.poly.toba.model.PagingDTO;
+import com.poly.toba.model.RecomPagingDTO;
+import com.poly.toba.model.RecommentDTO;
 import com.poly.toba.service.impl.ICommentService;
 @SpringBootApplication
 @RestController
-@RequestMapping("/comments")
-public class CommentController {
+@RequestMapping("/recomments")
+public class RecommentController {
 	@Autowired
 	private ICommentService commentService;
 	
-	@GetMapping("/list/{noticeNo}/{pageno}")
-	public ResponseEntity<HashMap<String,Object>> getCommentList(@PathVariable String noticeNo,@PathVariable String pageno) throws Exception{
+	@GetMapping("/list/{noticeNo}/{commentno}/{pageno}")
+	public ResponseEntity<HashMap<String,Object>> getCommentList(@PathVariable String noticeNo,@PathVariable String commentno,@PathVariable String pageno) throws Exception{
 		System.out.println("aucqua:"+pageno);
+		System.out.println("aucquaas:"+commentno);
 		//페이징
-		PagingDTO paging = new PagingDTO();
+		RecomPagingDTO paging = new RecomPagingDTO();
 		int pagenum = Integer.parseInt(pageno);
-		int contentnum = 10;
+		int contentnum = 5;
 		int totalcount = 0;
-		CommentDTO cDTO = new CommentDTO();
-		List<CommentDTO> cList = new ArrayList<>();
+		RecommentDTO recDTO = new RecommentDTO();
+		List<RecommentDTO> cList = new ArrayList<>();
 		HashMap<String,Object> hMap = new HashMap<>();
-		cDTO.setNoticeNo(noticeNo);
+		recDTO.setNoticeNo(noticeNo);
+		recDTO.setCommentNo(commentno);
 		
 		/*
 		 * if(cList==null) { hMap.put("commentTotalCount", 0); }else { hMap.put("cList",
 		 * cList); hMap.put("commentTotalCount", cList.size()); }
 		 */
-		totalcount=commentService.commentListTotalCount(cDTO);
+		totalcount=commentService.recommentListTotalCount(recDTO);
 		paging.setTotalcount(totalcount);//전체 게시글 지정
  		paging.setPagenum(pagenum-1);// 현재페이지를 페이지 객체에 지정한다 -1 해야 쿼리에서 사용가능
  		paging.setContentnum(contentnum);// 한 페이지에 몇개 씩 게시글을 보여줄지 지정
@@ -55,36 +58,25 @@ public class CommentController {
  		paging.prevnext(pagenum); //현재 페이지 번호로 화살표를 나타낼지 정함
  		paging.setStartPage(paging.getCurrentblock());//시작페이지를 페이지 블록번호로 정함
  		paging.setEndPage(paging.getLastblock(), paging.getCurrentblock());//마지막 페이지를 마지막 페이지 블록과 현재 페이지 블록번호로 정함
- 		int i = paging.getPagenum()*10;
+ 		int i = paging.getPagenum()*5;
 		int j = paging.getContentnum();
 		hMap.put("pagenum",i);
 		hMap.put("contentnum", j);
-		hMap.put("noticeNo", cDTO.getNoticeNo());
-		cList = commentService.getCommentList(hMap);
+		hMap.put("noticeNo", recDTO.getNoticeNo());
+		hMap.put("commentno", recDTO.getCommentNo());
+		cList = commentService.getRecommentList(hMap);
 		if(cList==null) {
-			hMap.put("commentTotalCount", 0);
+			hMap.put("recommentTotalCount", 0);
 		}else {
 			hMap.put("cList", cList);
-			hMap.put("commentTotalCount", paging.getTotalcount());
+			hMap.put("recommentTotalCount", paging.getTotalcount());
 			hMap.put("paging", paging);	
 		}
-		//좋아요 개수
-		List<String> cLikeList = new ArrayList<>();
-		List<CommentDTO> cLikeCountList = new ArrayList<>();
-		//cLikeList = commentService.pagingLikeCnt(hMap)
-		for(int k=0;k<cList.size();k++) {
-			cLikeList.add(cList.get(k).getCommentNo());
-		}
-		hMap.put("cLikeList",cLikeList);
-		cLikeCountList = commentService.pagingLikeCnt(hMap);
-		hMap.put("cLikeCountList",cLikeCountList);
-	
-	
 		return new ResponseEntity<HashMap<String,Object>>(hMap,HttpStatus.OK);
 	}
 	@PostMapping("/register")
-	public ResponseEntity<String> insertComment(@RequestBody CommentDTO cDTO) throws Exception{
-		int result = commentService.insertComment(cDTO);
+	public ResponseEntity<String> insertComment(@RequestBody RecommentDTO recDTO) throws Exception{
+		int result = commentService.insertRecomment(recDTO);
 		
 		if(result == 1) {
 			return new ResponseEntity<String>("success",HttpStatus.OK);
@@ -94,44 +86,14 @@ public class CommentController {
 	
 	}
 	@CrossOrigin(origins = "*")
-	@DeleteMapping("/delete/{commentNo}")
-	public ResponseEntity<String> deleteComment(@PathVariable String commentNo) throws Exception{
-		System.out.println("삭제"+commentNo);
-		int result = commentService.deleteComment(commentNo);
+	@DeleteMapping("/delete/{recommentNo}")
+	public ResponseEntity<String> deleteComment(@PathVariable String recommentNo) throws Exception{
+		int result = commentService.deleteRecommentSel(recommentNo);
 		
 		if(result == 1) {
 			return new ResponseEntity<String>("success",HttpStatus.OK);
 		}else {
 			return new ResponseEntity<String>("failed",HttpStatus.BAD_REQUEST);
 		}
-	}
-	
-	@PostMapping("/likeUp")
-	public ResponseEntity<HashMap<String,Object>> likeUp(@RequestBody LikeDTO likeDTO) throws Exception{
-		
-		LikeDTO result = new LikeDTO();
-		int result2 = 0;
-		int likeCommentCount = 0;
-		boolean check= false;
-		HashMap<String,Object> hMap = new HashMap<>();
-		result = commentService.likeCheck(likeDTO);		
-		if(result==null) {
-				result2 = commentService.likeUp(likeDTO);
-				result = commentService.likeCheck(likeDTO);	
-				likeCommentCount = commentService.likeCommentCount(likeDTO);
-				hMap.put("result", result);
-				hMap.put("likeCommentCount", likeCommentCount);
-		} else {
-			result2=commentService.likeDown(likeDTO);
-			if(result2 == 1) {
-				
-				likeCommentCount = commentService.likeCommentCount(likeDTO);
-				result.setLikeCheck("n");
-				hMap.put("result",result);
-				hMap.put("likeCommentCount", likeCommentCount);
-			}
-		}
-		return new ResponseEntity<HashMap<String,Object>>(hMap,HttpStatus.OK);
-		
 	}
 }

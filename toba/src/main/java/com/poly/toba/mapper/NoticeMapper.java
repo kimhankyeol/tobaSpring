@@ -27,5 +27,6 @@ public interface NoticeMapper {
 	public int noticeSearchTitleTotalCount(HashMap<String, Object> hMap);
 	public int noticeSearchContentTotalCount(HashMap<String, Object> hMap);
 	public int noticeSearchWriterTotalCount(HashMap<String, Object> hMap);
-
+	// 등록
+	public int noticeReg(NoticeDTO nDTO) throws Exception;
 }

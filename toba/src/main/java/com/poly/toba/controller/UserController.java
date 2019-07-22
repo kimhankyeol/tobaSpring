@@ -73,7 +73,6 @@ public class UserController {
 	@PostMapping("/register")
 	public ResponseEntity<String> userRegister(@RequestBody UserDTO uDTO) throws Exception{
 		System.out.println("가입 시작");
-		//비밀번호 암호화 해야함
 		if(uDTO.getUserEmail() == null) {
 			System.out.println("test");
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
