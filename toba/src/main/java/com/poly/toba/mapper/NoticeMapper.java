@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.poly.toba.model.BoardLikeDTO;
 import com.poly.toba.model.NoticeDTO;
 
 @Mapper
@@ -29,4 +30,9 @@ public interface NoticeMapper {
 	public int noticeSearchWriterTotalCount(HashMap<String, Object> hMap);
 	// 등록
 	public int noticeReg(NoticeDTO nDTO) throws Exception;
+	// 좋아요
+	public int noticeLikeCheck(BoardLikeDTO blDTO) throws Exception;
+	public int noticeLike(BoardLikeDTO blDTO) throws Exception;
+	public int noticeLikeDelete(BoardLikeDTO blDTO) throws Exception;
+	public int noticeLikeTotalCount(BoardLikeDTO blDTO) throws Exception;
 }

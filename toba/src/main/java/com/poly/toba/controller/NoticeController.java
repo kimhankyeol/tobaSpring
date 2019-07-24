@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.poly.toba.model.BoardLikeDTO;
 import com.poly.toba.model.NoticeDTO;
 import com.poly.toba.model.PagingDTO;
 import com.poly.toba.service.impl.ICommonService;
@@ -160,6 +161,12 @@ public class NoticeController {
 		int result = noticeService.noticeUpdateCount(nDTO);
 		hMap.put("nDTO", nDTO);
 		hMap.put("noticeTotalCount", noticeService.noticeTotalCount());
+		// 좋아요 수 가져오기
+		BoardLikeDTO blDTO = new BoardLikeDTO();
+		blDTO.setNoticeNo(noticeNo);
+		int likeCount = noticeService.noticeLikeTotalCount(blDTO);
+		hMap.put("noticeLikeCount", likeCount);
+		System.out.println(" 이 글의 좋아요 수는 : " + likeCount+"개 입니당");
 		String prev, next;
 		if (nDTO.getNoticePrev() == null && nDTO.getNoticeNext() != null) {
 			prev = "이전 글은 없습니다.";
@@ -184,8 +191,16 @@ public class NoticeController {
 			nextDTO = (NoticeDTO) noticeService.getDetail(nextDTO);
 			hMap.put("prevDTO", prevDTO);
 			hMap.put("nextDTO", nextDTO);
+		} else {
+			prev = "이전 글은 없습니다.";
+			next = "다음 글은 없습니다.";
+			prevDTO.setNoticeNo("0");
+			prevDTO.setNoticeTitle(prev);
+			nextDTO.setNoticeNo("0");
+			nextDTO.setNoticeTitle(next);
+			hMap.put("prevDTO", prevDTO);
+			hMap.put("nextDTO", nextDTO);
 		}
-
 		return new ResponseEntity<HashMap<String, Object>>(hMap, HttpStatus.OK);
 	}
 
@@ -195,5 +210,21 @@ public class NoticeController {
 		int result = noticeService.noticeReg(nDTO);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
-
+	// 공지사항 좋아요
+	@PostMapping("/noticeLike")
+	public ResponseEntity<Integer> noticeLike(@RequestBody BoardLikeDTO blDTO) throws Exception {
+		int likeCount, result;
+		// 좋아요 여부 확인
+		result = noticeService.noticeLikeCheck(blDTO);
+		// 좋아요 하지 않았었으면
+		if(result == 0) {
+			result = noticeService.noticeLike(blDTO);
+			likeCount = noticeService.noticeLikeTotalCount(blDTO);
+		} else {
+			// 좋아요 했었으면
+			result = noticeService.noticeLikeDelete(blDTO);
+			likeCount = noticeService.noticeLikeTotalCount(blDTO);
+		}
+		return new ResponseEntity<Integer>(likeCount, HttpStatus.OK);
+	}
 }

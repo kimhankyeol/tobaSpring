@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.poly.toba.mapper.NoticeMapper;
+import com.poly.toba.model.BoardLikeDTO;
 import com.poly.toba.model.NoticeDTO;
 import com.poly.toba.service.impl.ICommonService;
 
@@ -79,6 +80,24 @@ public class NoticeService implements ICommonService<NoticeDTO>{
 	   public int noticeReg(NoticeDTO nDTO) throws Exception {
 	      return noticeMapper.noticeReg(nDTO);
 	   }
+
+	// 좋아요
+	@Override
+	public int noticeLikeCheck(BoardLikeDTO blDTO) throws Exception {
+		return noticeMapper.noticeLikeCheck(blDTO);
+	}
+	@Override
+	public int noticeLike(BoardLikeDTO blDTO) throws Exception {
+		return noticeMapper.noticeLike(blDTO);
+	}
+	@Override
+	public int noticeLikeDelete(BoardLikeDTO blDTO) throws Exception {
+		return noticeMapper.noticeLikeDelete(blDTO);
+	}
+	@Override
+	public int noticeLikeTotalCount(BoardLikeDTO blDTO) throws Exception {
+		return noticeMapper.noticeLikeTotalCount(blDTO);
+	}
 	
 
 }

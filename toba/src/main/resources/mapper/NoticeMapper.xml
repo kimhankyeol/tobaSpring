@@ -2,78 +2,78 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.poly.toba.mapper.NoticeMapper">
 <select id="getNoticeList" parameterType="map" resultType="NoticeDTO">
-	SELECT 
-		noticeNo,noticeContent,noticeTitle,noticeRegdate,noticeWriter
-	FROM NOTICE 
-	ORDER BY noticeNo desc 
-	limit #{pagenum},#{contentnum}
+   SELECT 
+      noticeNo,noticeContent,noticeTitle,noticeRegdate,noticeWriter
+   FROM notice 
+   ORDER BY noticeNo desc 
+   limit #{pagenum},#{contentnum}
 </select>
 <select id="noticeTotalCount" resultType="java.lang.Integer">
-		SELECT COUNT(*) FROM NOTICE
+      SELECT COUNT(*) FROM notice
 </select>
 <select id="getNoticeDetail" parameterType="NoticeDTO" resultType="NoticeDTO">
-	SELECT
-		*,
-		(SELECT noticeNo FROM NOTICE WHERE <![CDATA[noticeNo < #{noticeNo}]]>  ORDER BY noticeNo DESC LIMIT 1) AS noticePrev,
-		(SELECT noticeNo FROM NOTICE WHERE <![CDATA[noticeNo > #{noticeNo}]]>   ORDER BY noticeNo LIMIT 1) AS noticeNext
-	FROM 
-		NOTICE
-	WHERE
-		noticeNo = #{noticeNo};
+   SELECT
+      *,
+      (SELECT noticeNo FROM notice WHERE <![CDATA[noticeNo < #{noticeNo}]]>  ORDER BY noticeNo DESC LIMIT 1) AS noticePrev,
+      (SELECT noticeNo FROM notice WHERE <![CDATA[noticeNo > #{noticeNo}]]>   ORDER BY noticeNo LIMIT 1) AS noticeNext
+   FROM 
+      notice
+   WHERE
+      noticeNo = #{noticeNo};
 </select>
 <!-- 조회수 -->
 <update id="noticeUpdateCount" parameterType="NoticeDTO">
-	UPDATE 
-		NOTICE
-	SET
-		noticeReadcount = noticeReadcount+1
-	WHERE
-		noticeNo = #{noticeNo}
+   UPDATE 
+      notice
+   SET
+      noticeReadcount = noticeReadcount+1
+   WHERE
+      noticeNo = #{noticeNo}
 </update>
 
 <!-- 검색 게시물 개수  -->
 
 <select id="noticeSearchTitleTotalCount" parameterType="map" resultType="java.lang.Integer">
-	SELECT COUNT(*) FROM NOTICE WHERE noticeTitle LIKE CONCAT('%',#{searchWord},'%')
+   SELECT COUNT(*) FROM notice WHERE noticeTitle LIKE CONCAT('%',#{searchWord},'%')
 </select>
 <select id="noticeSearchContentTotalCount" parameterType="map" resultType="java.lang.Integer">
-	SELECT COUNT(*) FROM NOTICE WHERE noticeContent LIKE CONCAT('%',#{searchWord},'%')
+   SELECT COUNT(*) FROM notice WHERE noticeContent LIKE CONCAT('%',#{searchWord},'%')
 </select>
 <select id="noticeSearchWriterTotalCount" parameterType="map" resultType="java.lang.Integer">
-	SELECT COUNT(*) FROM NOTICE WHERE noticeWriter LIKE CONCAT('%',#{searchWord},'%')
+   SELECT COUNT(*) FROM notice WHERE noticeWriter LIKE CONCAT('%',#{searchWord},'%')
 </select>
 <!-- 검색 리스트 -->
 <select id="getNoticeSearchTitleList" parameterType="map" resultType="NoticeDTO">
-	SELECT 
-		noticeNo,noticeContent,noticeTitle,noticeRegdate,noticeWriter
-	FROM NOTICE
-  	WHERE noticeTitle LIKE CONCAT('%',#{searchWord},'%')
-	ORDER BY noticeNo desc 
-	limit #{pagenum},#{contentnum}
+   SELECT 
+      noticeNo,noticeContent,noticeTitle,noticeRegdate,noticeWriter
+   FROM notice
+     WHERE noticeTitle LIKE CONCAT('%',#{searchWord},'%')
+   ORDER BY noticeNo desc 
+   limit #{pagenum},#{contentnum}
 </select>
 <select id="getNoticeSearchContentList" parameterType="map" resultType="NoticeDTO">
-	SELECT 
-		noticeNo,noticeContent,noticeTitle,noticeRegdate,noticeWriter
-	FROM NOTICE
-	WHERE noticeContent LIKE CONCAT('%',#{searchWord},'%')
-	ORDER BY noticeNo desc 
-	limit #{pagenum},#{contentnum}
+   SELECT 
+      noticeNo,noticeContent,noticeTitle,noticeRegdate,noticeWriter
+   FROM notice
+   WHERE noticeContent LIKE CONCAT('%',#{searchWord},'%')
+   ORDER BY noticeNo desc 
+   limit #{pagenum},#{contentnum}
 </select>
 <select id="getNoticeSearchWriterList" parameterType="map" resultType="NoticeDTO">
-	SELECT 
-		noticeNo,noticeContent,noticeTitle,noticeRegdate,noticeWriter
-	FROM NOTICE
-	WHERE noticeWriter LIKE CONCAT('%',#{searchWord},'%')
-	ORDER BY noticeNo desc 
-	limit #{pagenum},#{contentnum}
+   SELECT 
+      noticeNo,noticeContent,noticeTitle,noticeRegdate,noticeWriter
+   FROM notice
+   WHERE noticeWriter LIKE CONCAT('%',#{searchWord},'%')
+   ORDER BY noticeNo desc 
+   limit #{pagenum},#{contentnum}
 </select>
 <insert id="noticeReg" parameterType="NoticeDTO">
-   INSERT INTO NOTICE (
-      NOTICETITLE,
-      NOTICECONTENT,
-      NOTICEREGDATE,
-      NOTICEWRITER,
-      NOTICEREADCOUNT
+   INSERT INTO notice (
+      noticeTitle,
+      noticeContent,
+      noticeRegdate,
+      noticeWriter,
+      noticeReadcount
    ) VALUES (
       #{noticeTitle},
       #{noticeContent},
@@ -82,4 +82,28 @@
       0
    )
 </insert>
+<!-- 좋아요 기능 -->
+<select id="noticeLikeCheck" resultType="int">
+	SELECT COUNT(*)
+	FROM noticelike
+	WHERE noticeNo=#{noticeNo} AND userNo=#{userNo}
+</select>
+<insert id="noticeLike" parameterType="BoardLikeDTO">
+	INSERT INTO noticelike (
+		noticeNo,
+		userNo
+	) VALUES (
+		#{noticeNo},
+		#{userNo}
+	)
+</insert>
+<delete id="noticeLikeDelete" parameterType="BoardLikeDTO">
+	DELETE FROM noticelike
+	WHERE noticeNo=#{noticeNo} AND userNo=#{userNo}
+</delete>
+<select id="noticeLikeTotalCount" resultType="int">
+	SELECT COUNT(*)
+	FROM noticelike
+	WHERE noticeNo=#{noticeNo}
+</select>
 </mapper>

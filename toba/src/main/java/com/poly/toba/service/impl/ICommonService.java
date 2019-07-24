@@ -3,6 +3,7 @@ package com.poly.toba.service.impl;
 import java.util.HashMap;
 import java.util.List;
 
+import com.poly.toba.model.BoardLikeDTO;
 import com.poly.toba.model.NoticeDTO;
 
 public interface ICommonService<T> {
@@ -30,9 +31,12 @@ public interface ICommonService<T> {
 	public List<NoticeDTO> getNoticeSearchContentList(HashMap<String, Object> hMap) throws Exception;
 	public List<NoticeDTO> getNoticeSearchWriterList(HashMap<String, Object> hMap) throws Exception;
 	// 등록
-	 public int noticeReg(NoticeDTO nDTO) throws Exception;
-
-	
+	public int noticeReg(NoticeDTO nDTO) throws Exception;
+	// 좋아요
+	public int noticeLikeCheck(BoardLikeDTO blDTO) throws Exception;
+	public int noticeLike(BoardLikeDTO blDTO) throws Exception;
+	public int noticeLikeDelete(BoardLikeDTO blDTO) throws Exception;
+	public int noticeLikeTotalCount(BoardLikeDTO blDTO) throws Exception;
 	
 
 }
