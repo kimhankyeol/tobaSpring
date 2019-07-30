@@ -136,5 +136,9 @@
               #{item}
      </foreach> 
     ) v
-   </select> 
+   </select>
+   <!-- 댓글 개수 -->
+   <select id="commentCount" resultType="int">
+   select count(*) from comment where noticeNo=#{noticeNo};
+   </select>
 </mapper>

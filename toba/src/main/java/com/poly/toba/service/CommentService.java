@@ -98,4 +98,9 @@ public class CommentService implements ICommentService{
 		return commentMapper.pagingLikeCnt(hMap);
 	}
 
+	@Override
+	public int commentCount(int noticeNo) throws Exception {
+		return commentMapper.commentCount(noticeNo);
+	}
+
 }

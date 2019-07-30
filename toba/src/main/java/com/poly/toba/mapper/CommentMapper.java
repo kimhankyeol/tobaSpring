@@ -41,6 +41,6 @@ public interface CommentMapper {
 
 	public List<CommentDTO> pagingLikeCnt(HashMap<String, Object> hMap) throws Exception;
 
-
+	public int commentCount(int noticeNo) throws Exception;
 	
 }

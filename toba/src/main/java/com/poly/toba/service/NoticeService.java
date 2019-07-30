@@ -98,6 +98,11 @@ public class NoticeService implements ICommonService<NoticeDTO>{
 	public int noticeLikeTotalCount(BoardLikeDTO blDTO) throws Exception {
 		return noticeMapper.noticeLikeTotalCount(blDTO);
 	}
+	// 메인 리스트 뿌리기
+	@Override
+	public List<NoticeDTO> getMainNoticeList() throws Exception {
+		return noticeMapper.getMainNoticeList();
+	}
 	
 
 }

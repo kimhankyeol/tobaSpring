@@ -35,4 +35,6 @@ public interface NoticeMapper {
 	public int noticeLike(BoardLikeDTO blDTO) throws Exception;
 	public int noticeLikeDelete(BoardLikeDTO blDTO) throws Exception;
 	public int noticeLikeTotalCount(BoardLikeDTO blDTO) throws Exception;
+	// 메인 리스트 뿌리기
+	public List<NoticeDTO> getMainNoticeList() throws Exception;
 }

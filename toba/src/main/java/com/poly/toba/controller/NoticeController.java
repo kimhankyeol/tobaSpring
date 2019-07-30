@@ -1,10 +1,19 @@
 package com.poly.toba.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.xml.bind.DatatypeConverter;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +28,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.toba.model.BoardLikeDTO;
+import com.poly.toba.model.CommentDTO;
 import com.poly.toba.model.NoticeDTO;
 import com.poly.toba.model.PagingDTO;
 import com.poly.toba.service.impl.ICommonService;
 import com.poly.toba.util.CmmUtil;
+import com.poly.toba.util.StringUtil;
 
 @SpringBootApplication
 @MapperScan(basePackages = "com.poly.toba")
@@ -60,8 +71,8 @@ public class NoticeController {
 		nList = noticeService.getNoticeList(hMap);
 		resultMap.put("nList", nList);
 		resultMap.put("paging", paging);
-		return new ResponseEntity<HashMap<String, Object>>(resultMap, HttpStatus.OK);
 
+		return new ResponseEntity<HashMap<String, Object>>(resultMap, HttpStatus.OK);
 	}
 
 	@GetMapping("/list/{pageno}/{searchWord}/{searchCategory}")
@@ -166,7 +177,7 @@ public class NoticeController {
 		blDTO.setNoticeNo(noticeNo);
 		int likeCount = noticeService.noticeLikeTotalCount(blDTO);
 		hMap.put("noticeLikeCount", likeCount);
-		System.out.println(" 이 글의 좋아요 수는 : " + likeCount+"개 입니당");
+		System.out.println(" 이 글의 좋아요 수는 : " + likeCount + "개 입니당");
 		String prev, next;
 		if (nDTO.getNoticePrev() == null && nDTO.getNoticeNext() != null) {
 			prev = "이전 글은 없습니다.";
@@ -204,12 +215,65 @@ public class NoticeController {
 		return new ResponseEntity<HashMap<String, Object>>(hMap, HttpStatus.OK);
 	}
 
-	@PostMapping("/submit")
+	@PostMapping("/noticeSubmit")
 	public ResponseEntity<Integer> regNotice(@RequestBody NoticeDTO nDTO) throws Exception {
-		System.out.println("게시물 등록을 해보자");
+		// 리눅스 기준으로 파일 경로를 작성 ( 루트 경로인 /으로 시작한다. )
+		// 윈도우라면 workspace의 드라이브를 파악하여 JVM이 알아서 처리해준다.
+		// 따라서 workspace가 C드라이브에 있다면 C드라이브에 upload 폴더를 생성해 놓아야 한다.
+		String contentBase64 = nDTO.getNoticeContent();
+		List<String> oldSrc = new ArrayList<>();
+		List<String> newSrc = new ArrayList<>();
+		List imgList = new ArrayList();
+		imgList = StringUtil.getImgSrc(contentBase64);
+		for (int i = 0; i < imgList.size(); i++) {
+			String[] strings = imgList.get(i).toString().split(",");
+			String extension;
+			switch (strings[0]) {// 이미지 타입 체크
+			case "data:image/jpeg;base64":
+				extension = "jpeg";
+				break;
+			case "data:image/png;base64":
+				extension = "png";
+				break;
+			case "data:image/gif;base64":
+				extension = "gif";
+				break;
+			default:// 이미지 타입
+				extension = "jpg";
+				break;
+			}
+
+			// 변환 base64 string to binary data
+			byte[] data = DatatypeConverter.parseBase64Binary(strings[1]);
+			String path = "D:/polyToba/toba/src/main/webapp/imageUpload/notice/";
+			UUID uid = UUID.randomUUID();
+			String newFileName = "";
+			String now = new SimpleDateFormat("yyyyMMddhmsS").format(new Date()); // 현재시간 나타내는 변수
+			newFileName = path + uid + now + i + "." + extension;
+			File filePath = new File(path);
+			if (!filePath.isDirectory()) {
+				filePath.mkdirs();
+			}
+			File file = new File(newFileName);
+			try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+				outputStream.write(data);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			oldSrc.add(imgList.get(i).toString());
+			newSrc.add("http://localhost:8080/imageUpload/notice/" + uid + now + i + "." + extension);
+		};
+		String replaceContent = StringUtil.getImgSrcReplace(contentBase64, oldSrc, newSrc);
+		nDTO.setNoticeContent(replaceContent);
 		int result = noticeService.noticeReg(nDTO);
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+		if (result == 1) {
+			return new ResponseEntity<Integer>(result, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Integer>(result, HttpStatus.OK);
+		}
 	}
+
 	// 공지사항 좋아요
 	@PostMapping("/noticeLike")
 	public ResponseEntity<Integer> noticeLike(@RequestBody BoardLikeDTO blDTO) throws Exception {
@@ -217,7 +281,7 @@ public class NoticeController {
 		// 좋아요 여부 확인
 		result = noticeService.noticeLikeCheck(blDTO);
 		// 좋아요 하지 않았었으면
-		if(result == 0) {
+		if (result == 0) {
 			result = noticeService.noticeLike(blDTO);
 			likeCount = noticeService.noticeLikeTotalCount(blDTO);
 		} else {

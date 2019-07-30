@@ -3,7 +3,7 @@
 <mapper namespace="com.poly.toba.mapper.NoticeMapper">
 <select id="getNoticeList" parameterType="map" resultType="NoticeDTO">
    SELECT 
-      noticeNo,noticeContent,noticeTitle,noticeRegdate,noticeWriter
+      noticeNo,noticeContent,noticeTitle,noticeRegdate,noticeWriter,noticeReadcount
    FROM notice 
    ORDER BY noticeNo desc 
    limit #{pagenum},#{contentnum}
@@ -53,7 +53,7 @@
 </select>
 <select id="getNoticeSearchContentList" parameterType="map" resultType="NoticeDTO">
    SELECT 
-      noticeNo,noticeContent,noticeTitle,noticeRegdate,noticeWriter
+      noticeNo,noticeContent,noticeTitle,noticeRegdate,noticeWriter,noticeReadcount
    FROM notice
    WHERE noticeContent LIKE CONCAT('%',#{searchWord},'%')
    ORDER BY noticeNo desc 
@@ -61,7 +61,7 @@
 </select>
 <select id="getNoticeSearchWriterList" parameterType="map" resultType="NoticeDTO">
    SELECT 
-      noticeNo,noticeContent,noticeTitle,noticeRegdate,noticeWriter
+      noticeNo,noticeContent,noticeTitle,noticeRegdate,noticeWriter,noticeReadcount
    FROM notice
    WHERE noticeWriter LIKE CONCAT('%',#{searchWord},'%')
    ORDER BY noticeNo desc 
@@ -105,5 +105,12 @@
 	SELECT COUNT(*)
 	FROM noticelike
 	WHERE noticeNo=#{noticeNo}
+</select>
+<!-- 메인 리스트 뿌리기 -->
+<select id="getMainNoticeList" resultType="NoticeDTO">
+	SELECT 
+		noticeNo, noticeTitle, noticeRegdate, noticeWriter
+	FROM notice
+	ORDER BY noticeNo desc limit 5
 </select>
 </mapper>
