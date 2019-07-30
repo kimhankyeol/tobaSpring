@@ -113,4 +113,25 @@
 	FROM notice
 	ORDER BY noticeNo desc limit 5
 </select>
+<!-- noticeList comment 개수, 좋아요 개수 -->
+<select id="noticePagingLikeCnt" parameterType="map" resultType="NoticeDTO">
+	SELECT noticeNo,likeno FROM(
+     SELECT n.noticeNo,COUNT(1) likeno
+     FROM notice n
+     inner join noticelike nl
+     on n.noticeNo = nl.noticeNo
+     GROUP BY nl.noticeNo 
+     having nl.noticeNo IN 
+     <foreach collection="nLikeList" item="item"  index="index" open="(" close=")" separator=",">
+		#{item}
+     </foreach>
+     ) v 
+</select>
+
+<select id="commentCountList" resultType="int">
+	select count(*) from comment where noticeNo=#{noticeNo}
+</select>
+<select id="likeCountList" resultType="int">
+	select count(*) from noticelike where noticeNo=#{noticeNo}
+</select>
 </mapper>

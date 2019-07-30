@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.poly.toba.model.CommentDTO;
 import com.poly.toba.model.LikeDTO;
+import com.poly.toba.model.NoticeDTO;
 import com.poly.toba.model.RecommentDTO;
 
 public interface ICommentService {
@@ -34,6 +35,8 @@ public interface ICommentService {
 	public int likeCommentCount(LikeDTO likeDTO) throws Exception;
 
 	public List<CommentDTO> pagingLikeCnt(HashMap<String, Object> hMap) throws Exception; 
-
+	// 메인에서 가져오기
 	public int commentCount(int noticeNo) throws Exception;
+	
+	
 }

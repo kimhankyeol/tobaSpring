@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.poly.toba.mapper.CommentMapper;
 import com.poly.toba.model.CommentDTO;
 import com.poly.toba.model.LikeDTO;
+import com.poly.toba.model.NoticeDTO;
 import com.poly.toba.model.RecommentDTO;
 import com.poly.toba.service.impl.ICommentService;
 

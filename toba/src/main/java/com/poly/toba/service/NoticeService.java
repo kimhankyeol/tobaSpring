@@ -103,6 +103,18 @@ public class NoticeService implements ICommonService<NoticeDTO>{
 	public List<NoticeDTO> getMainNoticeList() throws Exception {
 		return noticeMapper.getMainNoticeList();
 	}
+	@Override
+	public List<NoticeDTO> noticePagingLikeCnt(HashMap<String, Object> hMap) throws Exception {
+		return noticeMapper.noticePagingLikeCnt(hMap);
+	}
+	@Override
+	public int commentCountList(int noticeNo) throws Exception {
+		return noticeMapper.commentCountList(noticeNo);
+	}
+	@Override
+	public int likeCountList(int noticeNo) throws Exception {
+		return noticeMapper.likeCountList(noticeNo);
+	}
 	
 
 }

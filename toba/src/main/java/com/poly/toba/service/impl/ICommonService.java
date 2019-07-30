@@ -39,5 +39,9 @@ public interface ICommonService<T> {
 	public int noticeLikeTotalCount(BoardLikeDTO blDTO) throws Exception;
 	// 메인 리스트 뿌리기
 	public List<NoticeDTO> getMainNoticeList() throws Exception;
-
+	
+	public List<NoticeDTO> noticePagingLikeCnt(HashMap<String, Object> hMap) throws Exception;
+	
+	public int commentCountList(int noticeNo) throws Exception;
+	public int likeCountList(int noticeNo) throws Exception;
 }

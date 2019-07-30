@@ -31,6 +31,7 @@ import com.poly.toba.model.BoardLikeDTO;
 import com.poly.toba.model.CommentDTO;
 import com.poly.toba.model.NoticeDTO;
 import com.poly.toba.model.PagingDTO;
+import com.poly.toba.service.impl.ICommentService;
 import com.poly.toba.service.impl.ICommonService;
 import com.poly.toba.util.CmmUtil;
 import com.poly.toba.util.StringUtil;
@@ -42,6 +43,8 @@ import com.poly.toba.util.StringUtil;
 public class NoticeController {
 	@Autowired
 	private ICommonService noticeService;
+	@Autowired
+	private ICommentService commentService;
 
 	// 전체조회
 	@GetMapping("/list/{pageno}")
@@ -63,7 +66,8 @@ public class NoticeController {
 		paging.setStartPage(paging.getCurrentblock());// 시작페이지를 페이지 블록번호로 정함
 		paging.setEndPage(paging.getLastblock(), paging.getCurrentblock());// 마지막 페이지를 마지막 페이지 블록과 현재 페이지 블록번호로 정함
 		List<NoticeDTO> nList = new ArrayList();
-		HashMap<String, Integer> hMap = new HashMap<>();
+		HashMap<String, Object> hMap = new HashMap<>();
+		
 		int i = paging.getPagenum() * 10;
 		int j = paging.getContentnum();
 		hMap.put("pagenum", i);
@@ -71,7 +75,20 @@ public class NoticeController {
 		nList = noticeService.getNoticeList(hMap);
 		resultMap.put("nList", nList);
 		resultMap.put("paging", paging);
-
+		// 댓글, 좋아요 개수 가져오기
+		int noticeNo, commentCount, likeCount;
+		List<Integer> commentCountList = new ArrayList<>();
+		List<Integer> likeCountList = new ArrayList<>();
+		for(int k=0; k<nList.size(); k++) {
+			noticeNo = Integer.valueOf(nList.get(k).getNoticeNo());
+			System.out.println(noticeNo);
+			commentCount = noticeService.commentCountList(noticeNo);
+			likeCount = noticeService.likeCountList(noticeNo);
+			commentCountList.add(commentCount);
+			likeCountList.add(likeCount);
+		}
+		resultMap.put("commentCountList", commentCountList);
+		resultMap.put("likeCountList", likeCountList);
 		return new ResponseEntity<HashMap<String, Object>>(resultMap, HttpStatus.OK);
 	}
 
