@@ -44,4 +44,8 @@ public interface ICommonService<T> {
 	
 	public int commentCountList(int noticeNo) throws Exception;
 	public int likeCountList(int noticeNo) throws Exception;
+
+	public int getCommentCount(NoticeDTO nextDTO) throws Exception;
+	
 }
+

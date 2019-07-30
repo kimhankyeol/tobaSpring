@@ -15,6 +15,4 @@ public class NoticeDTO {
 	private String noticePrev;
 	private String noticeNext;
 	private String noticeReadcount;
-	private String commentCount;
-	private String likeCount;
 }

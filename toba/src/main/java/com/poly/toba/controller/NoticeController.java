@@ -194,34 +194,44 @@ public class NoticeController {
 		blDTO.setNoticeNo(noticeNo);
 		int likeCount = noticeService.noticeLikeTotalCount(blDTO);
 		hMap.put("noticeLikeCount", likeCount);
-		System.out.println(" 이 글의 좋아요 수는 : " + likeCount + "개 입니당");
+		// 이전글, 다음글 댓글 개수
+		int prevCommentCount, nextCommentCount;
+		// 페이징
 		String prev, next;
 		if (nDTO.getNoticePrev() == null && nDTO.getNoticeNext() != null) {
-			prev = "이전 글은 없습니다.";
+			prev = "이전 글이 없습니다.";
 			prevDTO.setNoticeNo("0");
 			prevDTO.setNoticeTitle(prev);
 			nextDTO.setNoticeNo(nDTO.getNoticeNext());
 			nextDTO = (NoticeDTO) noticeService.getDetail(nextDTO);
+			nextCommentCount = noticeService.getCommentCount(nextDTO);
 			hMap.put("prevDTO", prevDTO);
 			hMap.put("nextDTO", nextDTO);
+			hMap.put("nextCommentCount", nextCommentCount);
 		} else if (nDTO.getNoticePrev() != null && nDTO.getNoticeNext() == null) {
 			prevDTO.setNoticeNo(nDTO.getNoticePrev());
 			prevDTO = (NoticeDTO) noticeService.getDetail(prevDTO);
-			next = "다음 글은 없습니다.";
+			next = "다음 글이 없습니다.";
+			prevCommentCount = noticeService.getCommentCount(prevDTO);
 			nextDTO.setNoticeNo("0");
 			nextDTO.setNoticeTitle(next);
 			hMap.put("prevDTO", prevDTO);
 			hMap.put("nextDTO", nextDTO);
+			hMap.put("prevCommentCount", prevCommentCount);
 		} else if (nDTO.getNoticeNext() != null && nDTO.getNoticePrev() != null) {
 			prevDTO.setNoticeNo(nDTO.getNoticePrev());
 			prevDTO = (NoticeDTO) noticeService.getDetail(prevDTO);
 			nextDTO.setNoticeNo(nDTO.getNoticeNext());
 			nextDTO = (NoticeDTO) noticeService.getDetail(nextDTO);
+			nextCommentCount = noticeService.getCommentCount(nextDTO);
+			prevCommentCount = noticeService.getCommentCount(prevDTO);
 			hMap.put("prevDTO", prevDTO);
 			hMap.put("nextDTO", nextDTO);
+			hMap.put("nextCommentCount", nextCommentCount);
+			hMap.put("prevCommentCount", prevCommentCount);
 		} else {
-			prev = "이전 글은 없습니다.";
-			next = "다음 글은 없습니다.";
+			prev = "이전 글이 없습니다.";
+			next = "다음 글이 없습니다.";
 			prevDTO.setNoticeNo("0");
 			prevDTO.setNoticeTitle(prev);
 			nextDTO.setNoticeNo("0");
@@ -229,6 +239,7 @@ public class NoticeController {
 			hMap.put("prevDTO", prevDTO);
 			hMap.put("nextDTO", nextDTO);
 		}
+		
 		return new ResponseEntity<HashMap<String, Object>>(hMap, HttpStatus.OK);
 	}
 

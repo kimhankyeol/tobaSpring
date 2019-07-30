@@ -134,4 +134,7 @@
 <select id="likeCountList" resultType="int">
 	select count(*) from noticelike where noticeNo=#{noticeNo}
 </select>
+<select id="getCommentCount" resultType="int">
+	select count(*) from comment where noticeNo=#{noticeNo}
+</select>
 </mapper>

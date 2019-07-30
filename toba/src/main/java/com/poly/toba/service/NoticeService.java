@@ -115,6 +115,10 @@ public class NoticeService implements ICommonService<NoticeDTO>{
 	public int likeCountList(int noticeNo) throws Exception {
 		return noticeMapper.likeCountList(noticeNo);
 	}
+	@Override
+	public int getCommentCount(NoticeDTO nextDTO) throws Exception {
+		return noticeMapper.getCommentCount(nextDTO);
+	}
 	
 
 }
