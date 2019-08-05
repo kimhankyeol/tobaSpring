@@ -102,75 +102,41 @@ public class NoticeController {
 		int pagenum = Integer.parseInt(pageno);
 		int contentnum = 10;
 		int totalcount = 0;
+		int noticeNo, commentCount, likeCount;
+		List<Integer> commentCountList = new ArrayList<>();
+		List<Integer> likeCountList = new ArrayList<>();
 		if (CmmUtil.nvl(searchWord) != "") {
-			if (CmmUtil.nvl(searchCategory).equals("title")) {
-				HashMap<String, Object> hMap = new HashMap<>();
-				hMap.put("searchWord", searchWord);
-				hMap.put("searchCategory", searchCategory);
-				totalcount = noticeService.noticeSearchTitleTotalCount(hMap);
-				paging.setTotalcount(totalcount);// 전체 게시글 지정
-				paging.setPagenum(pagenum - 1);// 현재페이지를 페이지 객체에 지정한다 -1 해야 쿼리에서 사용가능
-				paging.setContentnum(contentnum);// 한 페이지에 몇개 씩 게시글을 보여줄지 지정
-				paging.setCurrentblock(pagenum);// 현재 페이지 블록이 몇번인지 현재 페이지 번호를 통해서 지정함
-				paging.setLastblock(paging.getTotalcount());// 마지막 블록 번호를 전체 게시글 수를 통해 정함
-				paging.prevnext(pagenum); // 현재 페이지 번호로 화살표를 나타낼지 정함
-				paging.setStartPage(paging.getCurrentblock());// 시작페이지를 페이지 블록번호로 정함
-				paging.setEndPage(paging.getLastblock(), paging.getCurrentblock());// 마지막 페이지를 마지막 페이지 블록과 현재 페이지 블록번호로
-																					// 정함
-				List<NoticeDTO> nList = new ArrayList();
-				int i = paging.getPagenum() * 10;
-				int j = paging.getContentnum();
-				hMap.put("pagenum", i);
-				hMap.put("contentnum", j);
-				nList = noticeService.getNoticeSearchTitleList(hMap);
-				resultMap.put("nList", nList);
-				resultMap.put("paging", paging);
-			} else if (CmmUtil.nvl(searchCategory).equals("content")) {
-				HashMap<String, Object> hMap = new HashMap<>();
-				hMap.put("searchWord", searchWord);
-				hMap.put("searchCategory", searchCategory);
-				totalcount = noticeService.noticeSearchContentTotalCount(hMap);
-				paging.setTotalcount(totalcount);// 전체 게시글 지정
-				paging.setPagenum(pagenum - 1);// 현재페이지를 페이지 객체에 지정한다 -1 해야 쿼리에서 사용가능
-				paging.setContentnum(contentnum);// 한 페이지에 몇개 씩 게시글을 보여줄지 지정
-				paging.setCurrentblock(pagenum);// 현재 페이지 블록이 몇번인지 현재 페이지 번호를 통해서 지정함
-				paging.setLastblock(paging.getTotalcount());// 마지막 블록 번호를 전체 게시글 수를 통해 정함
-				paging.prevnext(pagenum); // 현재 페이지 번호로 화살표를 나타낼지 정함
-				paging.setStartPage(paging.getCurrentblock());// 시작페이지를 페이지 블록번호로 정함
-				paging.setEndPage(paging.getLastblock(), paging.getCurrentblock());// 마지막 페이지를 마지막 페이지 블록과 현재 페이지 블록번호로
-																					// 정함
-				List<NoticeDTO> nList = new ArrayList();
-				int i = paging.getPagenum() * 10;
-				int j = paging.getContentnum();
-				hMap.put("pagenum", i);
-				hMap.put("contentnum", j);
-				nList = noticeService.getNoticeSearchContentList(hMap);
-				resultMap.put("nList", nList);
-				resultMap.put("paging", paging);
-			} else if (CmmUtil.nvl(searchCategory).equals("writer")) {
-				HashMap<String, Object> hMap = new HashMap<>();
-				hMap.put("searchWord", searchWord);
-				hMap.put("searchCategory", searchCategory);
-				totalcount = noticeService.noticeSearchContentWriterCount(hMap);
-				paging.setTotalcount(totalcount);// 전체 게시글 지정
-				paging.setPagenum(pagenum - 1);// 현재페이지를 페이지 객체에 지정한다 -1 해야 쿼리에서 사용가능
-				paging.setContentnum(contentnum);// 한 페이지에 몇개 씩 게시글을 보여줄지 지정
-				paging.setCurrentblock(pagenum);// 현재 페이지 블록이 몇번인지 현재 페이지 번호를 통해서 지정함
-				paging.setLastblock(paging.getTotalcount());// 마지막 블록 번호를 전체 게시글 수를 통해 정함
-				paging.prevnext(pagenum); // 현재 페이지 번호로 화살표를 나타낼지 정함
-				paging.setStartPage(paging.getCurrentblock());// 시작페이지를 페이지 블록번호로 정함
-				paging.setEndPage(paging.getLastblock(), paging.getCurrentblock());// 마지막 페이지를 마지막 페이지 블록과 현재 페이지 블록번호로
-																					// 정함
-				List<NoticeDTO> nList = new ArrayList();
-				int i = paging.getPagenum() * 10;
-				int j = paging.getContentnum();
-				hMap.put("pagenum", i);
-				hMap.put("contentnum", j);
-				nList = noticeService.getNoticeSearchWriterList(hMap);
-				resultMap.put("nList", nList);
-				resultMap.put("paging", paging);
+			HashMap<String, Object> hMap = new HashMap<>();
+			hMap.put("searchWord", searchWord);
+			hMap.put("searchCategory", searchCategory);
+			totalcount = noticeService.noticeSearchTitleTotalCount(hMap);
+			paging.setTotalcount(totalcount);// 전체 게시글 지정
+			paging.setPagenum(pagenum - 1);// 현재페이지를 페이지 객체에 지정한다 -1 해야 쿼리에서 사용가능
+			paging.setContentnum(contentnum);// 한 페이지에 몇개 씩 게시글을 보여줄지 지정
+			paging.setCurrentblock(pagenum);// 현재 페이지 블록이 몇번인지 현재 페이지 번호를 통해서 지정함
+			paging.setLastblock(paging.getTotalcount());// 마지막 블록 번호를 전체 게시글 수를 통해 정함
+			paging.prevnext(pagenum); // 현재 페이지 번호로 화살표를 나타낼지 정함
+			paging.setStartPage(paging.getCurrentblock());// 시작페이지를 페이지 블록번호로 정함
+			paging.setEndPage(paging.getLastblock(), paging.getCurrentblock());// 마지막 페이지를 마지막 페이지 블록과 현재 페이지 블록번호로
+																				// 정함
+			List<NoticeDTO> nList = new ArrayList();
+			int i = paging.getPagenum() * 10;
+			int j = paging.getContentnum();
+			hMap.put("pagenum", i);
+			hMap.put("contentnum", j);
+			nList = noticeService.getNoticeSearchTitleList(hMap);
+			resultMap.put("nList", nList);
+			resultMap.put("paging", paging);
+			for (int k = 0; k < nList.size(); k++) {
+				noticeNo = Integer.valueOf(nList.get(k).getNoticeNo());
+				hMap.put("noticeNo", noticeNo);
+				commentCount = noticeService.getSearchCommentCount(hMap);
+				likeCount = noticeService.getSearchLikeCount(hMap);
+				commentCountList.add(commentCount);
+				likeCountList.add(likeCount);
 			}
-
+			resultMap.put("commentCountList", commentCountList);
+			resultMap.put("likeCountList", likeCountList);
 		}
 		return new ResponseEntity<HashMap<String, Object>>(resultMap, HttpStatus.OK);
 
@@ -248,7 +214,9 @@ public class NoticeController {
 		// 리눅스 기준으로 파일 경로를 작성 ( 루트 경로인 /으로 시작한다. )
 		// 윈도우라면 workspace의 드라이브를 파악하여 JVM이 알아서 처리해준다.
 		// 따라서 workspace가 C드라이브에 있다면 C드라이브에 upload 폴더를 생성해 놓아야 한다.
+		System.out.println("들어오냐");
 		String contentBase64 = nDTO.getNoticeContent();
+		System.out.println(contentBase64);
 		List<String> oldSrc = new ArrayList<>();
 		List<String> newSrc = new ArrayList<>();
 		List imgList = new ArrayList();
@@ -273,7 +241,7 @@ public class NoticeController {
 
 			// 변환 base64 string to binary data
 			byte[] data = DatatypeConverter.parseBase64Binary(strings[1]);
-			String path = "D:/polyToba/toba/src/main/webapp/imageUpload/notice/";
+			String path = "/usr/local/tomcat/webapps/ROOT/imageUpload/notice/";
 			UUID uid = UUID.randomUUID();
 			String newFileName = "";
 			String now = new SimpleDateFormat("yyyyMMddhmsS").format(new Date()); // 현재시간 나타내는 변수
@@ -290,7 +258,7 @@ public class NoticeController {
 			}
 
 			oldSrc.add(imgList.get(i).toString());
-			newSrc.add("http://localhost:8080/imageUpload/notice/" + uid + now + i + "." + extension);
+			newSrc.add("http://15.164.160.236:8080/imageUpload/notice/" + uid + now + i + "." + extension);
 		};
 		String replaceContent = StringUtil.getImgSrcReplace(contentBase64, oldSrc, newSrc);
 		nDTO.setNoticeContent(replaceContent);

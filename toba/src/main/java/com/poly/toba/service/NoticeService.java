@@ -45,16 +45,6 @@ public class NoticeService implements ICommonService<NoticeDTO>{
 		// TODO Auto-generated method stub
 		return noticeMapper.noticeSearchTitleTotalCount(hMap);
 	}
-	@Override
-	public int noticeSearchContentTotalCount(HashMap<String, Object> hMap) throws Exception {
-		// TODO Auto-generated method stub
-		return noticeMapper.noticeSearchContentTotalCount(hMap);
-	}
-	@Override
-	public int noticeSearchContentWriterCount(HashMap<String, Object> hMap) throws Exception {
-		// TODO Auto-generated method stub
-		return noticeMapper.noticeSearchWriterTotalCount(hMap);
-	}
 	//게시물 리스트
 	@Override
 	public List<NoticeDTO> getNoticeList(HashMap<String, Integer> hMap) throws Exception {
@@ -65,16 +55,6 @@ public class NoticeService implements ICommonService<NoticeDTO>{
 	public List<NoticeDTO> getNoticeSearchTitleList(HashMap<String, Object> hMap) throws Exception {
 		// TODO Auto-generated method stub
 		return noticeMapper.getNoticeSearchTitleList(hMap);
-	}
-	@Override
-	public List<NoticeDTO> getNoticeSearchContentList(HashMap<String, Object> hMap) throws Exception {
-		// TODO Auto-generated method stub
-		return noticeMapper.getNoticeSearchContentList(hMap);
-	}
-	@Override
-	public List<NoticeDTO> getNoticeSearchWriterList(HashMap<String, Object> hMap) throws Exception {
-		// TODO Auto-generated method stub
-		return noticeMapper.getNoticeSearchWriterList(hMap);
 	}
 	@Override
 	   public int noticeReg(NoticeDTO nDTO) throws Exception {
@@ -118,6 +98,14 @@ public class NoticeService implements ICommonService<NoticeDTO>{
 	@Override
 	public int getCommentCount(NoticeDTO nextDTO) throws Exception {
 		return noticeMapper.getCommentCount(nextDTO);
+	}
+	@Override
+	public int getSearchCommentCount(HashMap<String, Object> hMap) throws Exception {
+		return noticeMapper.getSearchCommentCount(hMap);
+	}
+	@Override
+	public int getSearchLikeCount(HashMap<String, Object> hMap) throws Exception {
+		return noticeMapper.getSearchLikeCount(hMap);
 	}
 	
 

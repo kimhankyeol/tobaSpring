@@ -22,12 +22,8 @@ public interface NoticeMapper {
 	//게시물 리스트
 	public List<NoticeDTO> getNoticeList(HashMap<String, Integer> hMap) throws Exception;
 	public List<NoticeDTO> getNoticeSearchTitleList(HashMap<String, Object> hMap);
-	public List<NoticeDTO> getNoticeSearchContentList(HashMap<String, Object> hMap);
-	public List<NoticeDTO> getNoticeSearchWriterList(HashMap<String, Object> hMap);
 	//검색 게시물 총개수
 	public int noticeSearchTitleTotalCount(HashMap<String, Object> hMap);
-	public int noticeSearchContentTotalCount(HashMap<String, Object> hMap);
-	public int noticeSearchWriterTotalCount(HashMap<String, Object> hMap);
 	// 등록
 	public int noticeReg(NoticeDTO nDTO) throws Exception;
 	// 좋아요
@@ -44,4 +40,7 @@ public interface NoticeMapper {
 	public int likeCountList(int noticeNo) throws Exception;
 	
 	public int getCommentCount(NoticeDTO nextDTO) throws Exception;
+	
+	public int getSearchCommentCount(HashMap<String, Object> hMap) throws Exception;
+	public int getSearchLikeCount(HashMap<String, Object> hMap) throws Exception;
 }
