@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,6 +48,7 @@ public class MainController {
 		HashMap<String, Object> hMap = new HashMap<>();
 		List<NoticeDTO> nList = noticeService.getMainNoticeList();
 		hMap.put("nList", nList);
+		System.out.println("nList : "+nList);
 		for (int i = 0; i < nList.size(); i++) {
 			noticeNo = Integer.valueOf(nList.get(i).getNoticeNo());
 			commentCount = commentService.commentCount(noticeNo);
