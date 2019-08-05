@@ -6,6 +6,7 @@
 		SELECT
 		noticeNo,noticeContent,noticeTitle,noticeRegdate,noticeWriter,noticeReadcount
 		FROM notice
+		WHERE noticeStatus = 1
 		ORDER BY noticeNo desc
 		limit #{pagenum},#{contentnum}
 	</select>
@@ -17,13 +18,13 @@
 		SELECT
 		*,
 		(SELECT noticeNo FROM notice WHERE <![CDATA[noticeNo < #{noticeNo}]]>
-		ORDER BY noticeNo DESC LIMIT 1) AS noticePrev,
+		 AND noticeStatus =1 ORDER BY noticeNo DESC LIMIT 1) AS noticePrev,
 		(SELECT noticeNo FROM notice WHERE <![CDATA[noticeNo > #{noticeNo}]]>
-		ORDER BY noticeNo LIMIT 1) AS noticeNext
+		 AND noticeStatus =1 ORDER BY noticeNo LIMIT 1) AS noticeNext
 		FROM
 		notice
 		WHERE
-		noticeNo = #{noticeNo};
+		noticeNo = #{noticeNo}
 	</select>
 	<!-- 조회수 -->
 	<update id="noticeUpdateCount" parameterType="NoticeDTO">
@@ -36,7 +37,6 @@
 	</update>
 
 	<!-- 검색 게시물 개수 -->
-
 	<select id="noticeSearchTitleTotalCount" parameterType="map"
 		resultType="java.lang.Integer">
 		SELECT COUNT(*) FROM notice WHERE
@@ -49,6 +49,7 @@
 		<if test="searchCategory.equals('writer')">
 			noticeWriter LIKE CONCAT('%',#{searchWord},'%')
 		</if>
+		AND noticeStatus = 1
 	</select>
 	<!-- 검색 리스트 -->
 	<select id="getNoticeSearchTitleList" parameterType="map"
@@ -65,24 +66,28 @@
 		<if test="searchCategory.equals('writer')">
 			noticeWriter LIKE CONCAT('%',#{searchWord},'%')
 		</if>
+		AND noticeStatus = 1
 		ORDER BY noticeNo desc
 		limit #{pagenum},#{contentnum}
 	</select>
 	<insert id="noticeReg" parameterType="NoticeDTO">
-		INSERT INTO notice (
-		noticeTitle,
-		noticeContent,
-		noticeRegdate,
-		noticeWriter,
-		noticeReadcount
-		) VALUES (
-		#{noticeTitle},
-		#{noticeContent},
-		NOW(),
-		#{noticeWriter},
-		0
-		)
-	</insert>
+      INSERT INTO notice (
+      noticeTitle,
+      noticeContent,
+      noticeRegdate,
+      noticeWriter,
+      noticeReadcount
+      ) VALUES (
+      #{noticeTitle},
+      #{noticeContent},
+      NOW(),
+      #{noticeWriter},
+      0
+      )
+      <selectKey  resultType="string" keyProperty="noticeNo" order="AFTER" >
+      SELECT last_insert_id() FROM DUAL;
+      </selectKey> 
+   </insert>
 	<!-- 좋아요 기능 -->
 	<select id="noticeLikeCheck" resultType="int">
 		SELECT COUNT(*)
@@ -112,6 +117,7 @@
 		SELECT
 		noticeNo, noticeTitle, noticeRegdate, noticeWriter
 		FROM notice
+		WHERE noticeStatus = 1
 		ORDER BY noticeNo desc limit 5
 	</select>
 	<!-- noticeList comment 개수, 좋아요 개수 -->
@@ -167,4 +173,9 @@
 			n.noticeWriter LIKE CONCAT('%',#{searchWord},'%')
 		</if>
 	</select>
+	<update id="deleteNotice" parameterType="string">
+		update notice
+		set noticeStatus = 0
+		where noticeNo = #{noticeNo}
+	</update>
 </mapper>

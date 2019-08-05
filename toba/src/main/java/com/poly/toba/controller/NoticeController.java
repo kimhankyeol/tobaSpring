@@ -20,9 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +37,7 @@ import com.poly.toba.model.PagingDTO;
 import com.poly.toba.service.impl.ICommentService;
 import com.poly.toba.service.impl.ICommonService;
 import com.poly.toba.util.CmmUtil;
+import com.poly.toba.util.MakeThumbnail;
 import com.poly.toba.util.StringUtil;
 
 @SpringBootApplication
@@ -210,65 +214,74 @@ public class NoticeController {
 	}
 
 	@PostMapping("/noticeSubmit")
-	public ResponseEntity<Integer> regNotice(@RequestBody NoticeDTO nDTO) throws Exception {
-		// 리눅스 기준으로 파일 경로를 작성 ( 루트 경로인 /으로 시작한다. )
-		// 윈도우라면 workspace의 드라이브를 파악하여 JVM이 알아서 처리해준다.
-		// 따라서 workspace가 C드라이브에 있다면 C드라이브에 upload 폴더를 생성해 놓아야 한다.
-		System.out.println("들어오냐");
-		String contentBase64 = nDTO.getNoticeContent();
-		System.out.println(contentBase64);
-		List<String> oldSrc = new ArrayList<>();
-		List<String> newSrc = new ArrayList<>();
-		List imgList = new ArrayList();
-		imgList = StringUtil.getImgSrc(contentBase64);
-		for (int i = 0; i < imgList.size(); i++) {
-			String[] strings = imgList.get(i).toString().split(",");
-			String extension;
-			switch (strings[0]) {// 이미지 타입 체크
-			case "data:image/jpeg;base64":
-				extension = "jpeg";
-				break;
-			case "data:image/png;base64":
-				extension = "png";
-				break;
-			case "data:image/gif;base64":
-				extension = "gif";
-				break;
-			default:// 이미지 타입
-				extension = "jpg";
-				break;
-			}
-
-			// 변환 base64 string to binary data
-			byte[] data = DatatypeConverter.parseBase64Binary(strings[1]);
-			String path = "/usr/local/tomcat/webapps/ROOT/imageUpload/notice/";
-			UUID uid = UUID.randomUUID();
-			String newFileName = "";
-			String now = new SimpleDateFormat("yyyyMMddhmsS").format(new Date()); // 현재시간 나타내는 변수
-			newFileName = path + uid + now + i + "." + extension;
-			File filePath = new File(path);
-			if (!filePath.isDirectory()) {
-				filePath.mkdirs();
-			}
-			File file = new File(newFileName);
-			try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
-				outputStream.write(data);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			oldSrc.add(imgList.get(i).toString());
-			newSrc.add("http://15.164.160.236:8080/imageUpload/notice/" + uid + now + i + "." + extension);
-		};
-		String replaceContent = StringUtil.getImgSrcReplace(contentBase64, oldSrc, newSrc);
-		nDTO.setNoticeContent(replaceContent);
-		int result = noticeService.noticeReg(nDTO);
-		if (result == 1) {
-			return new ResponseEntity<Integer>(result, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<Integer>(result, HttpStatus.OK);
-		}
-	}
+	   public ResponseEntity<Integer> regNotice(@RequestBody NoticeDTO nDTO) throws Exception {
+	      // 리눅스 기준으로 파일 경로를 작성 ( 루트 경로인 /으로 시작한다. )
+	      // 윈도우라면 workspace의 드라이브를 파악하여 JVM이 알아서 처리해준다.
+	      // 따라서 workspace가 C드라이브에 있다면 C드라이브에 upload 폴더를 생성해 놓아야 한다.
+	      System.out.println("들어오냐");
+	      String path = "/usr/local/tomcat/webapps/ROOT/imageUpload/notice/";
+	      String newFileName = "";
+	      String thumbFileName ="";
+	      String extension = "";
+	      UUID uid = UUID.randomUUID();
+	      String now = new SimpleDateFormat("yyyyMMddhmsS").format(new Date()); // 현재시간 나타내는 변수
+	      String contentBase64 = nDTO.getNoticeContent();
+	      int result = 0;
+	      List<String> oldSrc = new ArrayList<>();
+	      List<String> newSrc = new ArrayList<>();
+	      List imgList = new ArrayList();
+	      imgList = StringUtil.getImgSrc(contentBase64);
+	      for (int i = 0; i < imgList.size(); i++) {
+	         String[] strings = imgList.get(i).toString().split(",");
+	         switch (strings[0]) {// 이미지 타입 체크
+	         case "data:image/jpeg;base64":
+	            extension = "jpeg";
+	            break;
+	         case "data:image/png;base64":
+	            extension = "png";
+	            break;
+	         case "data:image/gif;base64":
+	            extension = "gif";
+	            break;
+	         default:// 이미지 타입
+	            extension = "jpg";
+	            break;
+	         }
+	         //이미지 이동
+	         oldSrc.add(imgList.get(i).toString());
+	         newSrc.add("http://15.164.160.236:8080/imageUpload/notice/" + uid + now + i + "." + extension);
+	         String replaceContent = StringUtil.getImgSrcReplace(contentBase64, oldSrc, newSrc);
+	         nDTO.setNoticeContent(replaceContent);
+	         result = noticeService.noticeReg(nDTO);
+	         
+	         // 변환 base64 string to binary data
+	         byte[] data = DatatypeConverter.parseBase64Binary(strings[1]);
+	         
+	         newFileName = path+nDTO.getNoticeNo()+"/"+ uid + now + i + "." + extension;
+	         thumbFileName = uid + now + i;
+	         File filePath = new File(path+nDTO.getNoticeNo()+"/");
+	         if (!filePath.isDirectory()) {
+	            filePath.mkdirs();
+	         }
+	         File file = new File(newFileName);
+	         try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+	            outputStream.write(data);
+	         } catch (IOException e) {
+	            e.printStackTrace();
+	         }
+	      };
+	      
+	      if(result ==1 && imgList.size()>0) {
+	           // 썸네일을 생성하는 메소드를 호출합니다.
+	         MakeThumbnail.makeThumbnail(path,newFileName, thumbFileName,nDTO.getNoticeNo(), extension);
+	         //noticeService.updateThumbnail();
+	      }
+	      if (result == 1) {
+	         return new ResponseEntity<Integer>(result, HttpStatus.OK);
+	      } else {
+	         return new ResponseEntity<Integer>(result, HttpStatus.OK);
+	      }
+	   }
 
 	// 공지사항 좋아요
 	@PostMapping("/noticeLike")
@@ -286,5 +299,17 @@ public class NoticeController {
 			likeCount = noticeService.noticeLikeTotalCount(blDTO);
 		}
 		return new ResponseEntity<Integer>(likeCount, HttpStatus.OK);
+	}
+	// 삭제
+	@CrossOrigin(origins = "*")
+	@PutMapping("/delete/{noticeNo}")
+	public ResponseEntity<String> deleteNotice(@PathVariable String noticeNo) throws Exception {
+		System.out.println("delete : " + noticeNo);
+		int result = noticeService.deleteNotice(noticeNo);
+		if(result == 1) {
+			return new ResponseEntity<String>("success", HttpStatus.OK); 
+		} else {
+			return new ResponseEntity<String>("failed", HttpStatus.BAD_REQUEST);
+		}
 	}
 }

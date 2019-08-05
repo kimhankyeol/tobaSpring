@@ -107,6 +107,10 @@ public class NoticeService implements ICommonService<NoticeDTO>{
 	public int getSearchLikeCount(HashMap<String, Object> hMap) throws Exception {
 		return noticeMapper.getSearchLikeCount(hMap);
 	}
+	@Override
+	public int deleteNotice(String noticeNo) throws Exception {
+		return noticeMapper.deleteNotice(noticeNo);
+	}
 	
 
 }
