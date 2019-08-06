@@ -111,6 +111,13 @@ public class NoticeService implements ICommonService<NoticeDTO>{
 	public int deleteNotice(String noticeNo) throws Exception {
 		return noticeMapper.deleteNotice(noticeNo);
 	}
-	
+	@Override
+	public int updateThumbnail(NoticeDTO nDTO) throws Exception {
+		return noticeMapper.updateThumbnail(nDTO);
+	}
+	@Override
+	public int noticeUpd(NoticeDTO nDTO) throws Exception {
+		return noticeMapper.noticeUpd(nDTO);
+	}
 
 }

@@ -44,4 +44,6 @@ public interface NoticeMapper {
 	public int getSearchCommentCount(HashMap<String, Object> hMap) throws Exception;
 	public int getSearchLikeCount(HashMap<String, Object> hMap) throws Exception;
 	public int deleteNotice(String noticeNo) throws Exception;
+	public int updateThumbnail(NoticeDTO nDTO) throws Exception;
+	public int noticeUpd(NoticeDTO nDTO) throws Exception;
 }
