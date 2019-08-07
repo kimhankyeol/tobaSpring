@@ -113,11 +113,9 @@ public class NoticeService implements ICommonService<NoticeDTO>{
 	}
 	@Override
 	public int updateThumbnail(NoticeDTO nDTO) throws Exception {
+		// TODO Auto-generated method stub
 		return noticeMapper.updateThumbnail(nDTO);
 	}
-	@Override
-	public int noticeUpd(NoticeDTO nDTO) throws Exception {
-		return noticeMapper.noticeUpd(nDTO);
-	}
+	
 
 }

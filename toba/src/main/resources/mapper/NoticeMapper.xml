@@ -18,9 +18,9 @@
 		SELECT
 		*,
 		(SELECT noticeNo FROM notice WHERE <![CDATA[noticeNo < #{noticeNo}]]>
-		AND noticeStatus =1 ORDER BY noticeNo DESC LIMIT 1) AS noticePrev,
+		 AND noticeStatus =1 ORDER BY noticeNo DESC LIMIT 1) AS noticePrev,
 		(SELECT noticeNo FROM notice WHERE <![CDATA[noticeNo > #{noticeNo}]]>
-		AND noticeStatus =1 ORDER BY noticeNo LIMIT 1) AS noticeNext
+		 AND noticeStatus =1 ORDER BY noticeNo LIMIT 1) AS noticeNext
 		FROM
 		notice
 		WHERE
@@ -71,22 +71,21 @@
 		limit #{pagenum},#{contentnum}
 	</select>
 	<insert id="noticeReg" parameterType="NoticeDTO">
-		INSERT INTO notice (
-		noticeTitle,
-		noticeRegdate,
-		noticeWriter,
-		noticeReadcount
-		) VALUES (
-		#{noticeTitle},
-		NOW(),
-		#{noticeWriter},
-		0
-		)
-		<selectKey resultType="string" keyProperty="noticeNo"
-			order="AFTER">
-			SELECT last_insert_id() FROM DUAL;
-		</selectKey>
-	</insert>
+      INSERT INTO notice (
+      noticeTitle,
+      noticeRegdate,
+      noticeWriter,
+      noticeReadcount
+      ) VALUES (
+      #{noticeTitle},
+      NOW(),
+      #{noticeWriter},
+      0
+      )
+      <selectKey  resultType="string" keyProperty="noticeNo" order="AFTER" >
+      SELECT last_insert_id() FROM DUAL;
+      </selectKey> 
+   </insert>
 	<!-- 좋아요 기능 -->
 	<select id="noticeLikeCheck" resultType="int">
 		SELECT COUNT(*)
@@ -159,8 +158,7 @@
 			n.noticeWriter LIKE CONCAT('%',#{searchWord},'%')
 		</if>
 	</select>
-	<select id="getSearchLikeCount" parameterType="map"
-		resultType="int">
+	<select id="getSearchLikeCount" parameterType="map" resultType="int">
 		select count(*) from noticelike nl inner join notice n on
 		nl.noticeNo=n.noticeNo where n.noticeNo=#{noticeNo} and
 		<if test="searchCategory.equals('title')">
@@ -180,8 +178,8 @@
 	</update>
 	<update id="updateThumbnail" parameterType="NoticeDTO">
 		update notice
-		set
-		noticeContent = #{noticeContent}
+		set 
+			noticeContent = #{noticeContent}
 		where noticeNo = #{noticeNo}
 	</update>
 </mapper>

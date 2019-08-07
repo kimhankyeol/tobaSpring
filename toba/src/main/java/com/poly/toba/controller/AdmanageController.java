@@ -296,4 +296,28 @@ public class AdmanageController {
 			return new ResponseEntity<HashMap<String, Object>>(resultMap, HttpStatus.OK);
 		}
 		
+		//메인 광고 랜덤 한개만 노출 , 전체 노출
+		@GetMapping("/exposeAd")
+		public ResponseEntity<HashMap<String,Object>> getExposeAd() throws Exception{
+			List<AdmanageDTO> adExposeList = new ArrayList();
+			AdmanageDTO aDTO = new AdmanageDTO();
+			HashMap<String,Object> hMap = new HashMap<>();
+			String adNo;
+			String adActive = "1";
+			adExposeList = admanageService.getAdExposeList(adActive);
+			int adRandomExposeNo = (int) (Math.random()*adExposeList.size()); //0<= x <5  1<= x <2 
+			aDTO = adExposeList.get(adRandomExposeNo);
+			System.out.println("번호:"+adRandomExposeNo);
+		    System.out.println(aDTO.getAdNo());
+		    adNo = aDTO.getAdNo();
+		    
+			//메인 광고 노출 카운트 1 증가 하는 서비스 
+			int result  = admanageService.updateMainAdExposeCountUp(adNo);
+			//광고 노출 횟수가 0 이면 완료 컬럼
+			//광고 노출 
+			hMap.put("adExposeList",adExposeList);
+			hMap.put("aDTO", aDTO);
+			return new ResponseEntity<HashMap<String,Object>>(hMap,HttpStatus.OK);
+		}
+		
 }

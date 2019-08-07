@@ -31,5 +31,10 @@ public interface IAdmanageService<T> {
 	public int adEnDisable(String able, String adNo) throws Exception;
 	//광고 검색
 	public List<AdmanageDTO> getAdSearchList(HashMap<String, Object> hMap) throws Exception;
+	//광고 노출
+	public List<AdmanageDTO> getAdExposeList(String adActive) throws Exception;
+	
+	//메인 광고 1개 노출 카운트 
+	public int updateMainAdExposeCountUp(String adNo) throws Exception;
 
 }
