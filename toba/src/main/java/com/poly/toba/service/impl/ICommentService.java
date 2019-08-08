@@ -38,5 +38,9 @@ public interface ICommentService {
 	// 메인에서 가져오기
 	public int commentCount(int noticeNo) throws Exception;
 	
+//	public String getContent(CommentDTO cDTO) throws Exception;
 	
+	public int commentUpd(CommentDTO cDTO) throws Exception;
+
+	public int remmentUpd(RecommentDTO rDTO) throws Exception;
 }

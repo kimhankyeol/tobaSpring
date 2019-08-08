@@ -43,4 +43,9 @@ public interface CommentMapper {
 
 	public int commentCount(int noticeNo) throws Exception;
 	
+//	public String getContent(CommentDTO cDTO) throws Exception;
+	
+	public int commentUpd(CommentDTO cDTO) throws Exception;
+
+	public int recommentUpd(RecommentDTO rDTO) throws Exception;
 }

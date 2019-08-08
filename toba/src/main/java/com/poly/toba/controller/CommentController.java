@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -92,7 +93,6 @@ public class CommentController {
 		} else {
 			return new ResponseEntity<String>("failed", HttpStatus.BAD_REQUEST);
 		}
-
 	}
 
 	@CrossOrigin(origins = "*")
@@ -134,6 +134,22 @@ public class CommentController {
 			}
 		}
 		return new ResponseEntity<HashMap<String, Object>>(hMap, HttpStatus.OK);
+	}
 
+	/*
+	 * @GetMapping("/detail/{noticeNo}/{commentNo}") public ResponseEntity<String>
+	 * getCommentDetail(@PathVariable String noticeNo, @PathVariable String
+	 * commentNo) throws Exception { System.out.println("댓글 가져와"); CommentDTO cDTO =
+	 * new CommentDTO(); cDTO.setNoticeNo(noticeNo); cDTO.setCommentNo(commentNo);
+	 * String content =(commentService.getContent(cDTO)).toString();
+	 * System.out.println(content); return new ResponseEntity<String>(content,
+	 * HttpStatus.OK); }
+	 */
+	@CrossOrigin(origins = "*")
+	@PutMapping("/update")
+	public ResponseEntity<String> updateComment(@RequestBody CommentDTO cDTO) throws Exception {
+		commentService.commentUpd(cDTO);
+		String content = cDTO.getCommentContent();
+		return new ResponseEntity<String>(content, HttpStatus.OK);
 	}
 }

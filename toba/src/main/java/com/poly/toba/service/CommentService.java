@@ -104,4 +104,19 @@ public class CommentService implements ICommentService{
 		return commentMapper.commentCount(noticeNo);
 	}
 
+	@Override
+	public int commentUpd(CommentDTO cDTO) throws Exception {
+		return commentMapper.commentUpd(cDTO);
+	}
+
+	@Override
+	public int remmentUpd(RecommentDTO rDTO) throws Exception {
+		return commentMapper.recommentUpd(rDTO);
+	}
+
+	/*
+	 * @Override public String getContent(CommentDTO cDTO) throws Exception { return
+	 * commentMapper.getContent(cDTO); }
+	 */
+
 }
