@@ -199,6 +199,7 @@ public class AdmanageController {
 			return new ResponseEntity<HashMap<String, Object>>(hMap, HttpStatus.OK);
 		}
 		// 광고 수정
+		// 광고 수정
 		@CrossOrigin("*")
 		@PutMapping("/adUpdate")
 		public ResponseEntity<String> adUpdate(@RequestBody AdmanageDTO adDTO) throws Exception {
@@ -218,16 +219,21 @@ public class AdmanageController {
                 break;
 			}
 			String data = adDTO.getAdImg().split(",")[1];
-			String now = new SimpleDateFormat("yyyyMMddhmsS").format(new Date());
-			String fileName = adDTO.getAdNo().toString() +"_" + now;
-			String realPath = "http://15.164.160.236:8080/imageUpload/ad/";
-			String path = "/usr/local/tomcat/webapps/ROOT/imageUpload/ad/"+fileName+"."+datatype;
-			
 			byte[] imageBytes = DatatypeConverter.parseBase64Binary(data);
+			String now = new SimpleDateFormat("yyyyMMddhmsS").format(new Date());
+			UUID uid = UUID.randomUUID();
+			String fileName = uid + now;
+			String realPath = "http://15.164.160.236:8080/imageUpload/ad/";
+			String path = "/usr/local/tomcat/webapps/ROOT/imageUpload/ad/";
+			String newFileName = fileName+"."+datatype;
 			
 			try {
+				File filePath = new File(path);
+				if (!filePath.isDirectory()) {
+					filePath.mkdirs();
+				}
 				BufferedImage bufImg = ImageIO.read(new ByteArrayInputStream(imageBytes));
-				ImageIO.write(bufImg, datatype, new File(path));
+				ImageIO.write(bufImg, datatype, new File(path+newFileName));
 				adDTO.setAdImg(realPath+fileName+"."+datatype);
 				adDTO.setAdChgdate(now);
 			} catch (IOException e) {
@@ -235,9 +241,9 @@ public class AdmanageController {
 			}
 			int result = admanageService.updateAd(adDTO);
 			if (result == 1) {
-				return new ResponseEntity<String>(HttpStatus.OK);
+				return new ResponseEntity<String>("success", HttpStatus.OK);
 			} else {
-				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>("failed", HttpStatus.BAD_REQUEST);
 			}
 		}
 		// 광고 활성화/비활성화
