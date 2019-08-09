@@ -14,4 +14,5 @@ public class RecommentDTO {
 	private String noticeNo;
 	private String commentNo;
 	private String userNo;
+	private String userProfilePath;
 }

@@ -43,4 +43,6 @@ public interface ICommentService {
 	public int commentUpd(CommentDTO cDTO) throws Exception;
 
 	public int remmentUpd(RecommentDTO rDTO) throws Exception;
+
+	public String getProfileImg(String commentWriter) throws Exception;
 }

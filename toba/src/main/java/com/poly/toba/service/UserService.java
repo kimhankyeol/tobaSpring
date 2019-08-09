@@ -59,4 +59,12 @@ public class UserService implements IUserService{
 	public int updatePassword(UserDTO uDTO) throws Exception {
 		return userMapper.updatePassword(uDTO);
 	}
+	@Override
+	public int changeNick(UserDTO uDTO) throws Exception {
+		return userMapper.changeNick(uDTO);
+	}
+	@Override
+	public int profileUpd(UserDTO uDTO) throws Exception {
+		return userMapper.profileUpd(uDTO);
+	}
 }

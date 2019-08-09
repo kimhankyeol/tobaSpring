@@ -20,4 +20,6 @@ public interface IUserService {
 	public UserDTO getUserLogin(UserDTO uDTO) throws Exception;
 	// 비밀번호 변경
 	public int updatePassword(UserDTO uDTO) throws Exception;
+	public int changeNick(UserDTO uDTO) throws Exception;
+	public int profileUpd(UserDTO uDTO) throws Exception;
 }

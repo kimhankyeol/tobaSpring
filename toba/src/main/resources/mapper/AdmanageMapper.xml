@@ -26,35 +26,46 @@
 		SELECT COUNT(*) FROM
 		advertisement
 	</select>
-	
 	<!-- 광고 리스트 -->
 	<select id="getAdList" parameterType="map" resultType="AdmanageDTO">
 		SELECT
-		adNo,adTitle,adImg,adRegdate
+		adNo,adTitle,adImg,adRegdate,adActive
 		FROM
 		advertisement
 		ORDER BY adNo desc
-		limit #{pagenum},#{contentnum}
+		limit #{startlist},#{listsize}
 	</select>
 	<!-- 노출 광고 리스트 -->
 	<select id="getAdEnableList" parameterType="map" resultType="AdmanageDTO">
 		SELECT
-		adNo,adTitle,adImg,adRegdate
+		adNo,adTitle,adImg,adRegdate,adActive
 		FROM
 		advertisement
 		WHERE adActive = '1'
 		ORDER BY adNo desc
-		limit #{pagenum},#{contentnum}
+		limit #{startlist},#{listsize}
+	</select>
+	<!-- 노출 광고 개수 -->
+	<select id="adEnableCount" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM
+		advertisement
+		WHERE adActive = '1'
 	</select>
 	<!-- 비활성 광고 리스트 -->
 	<select id="getAdDisableList" parameterType="map" resultType="AdmanageDTO">
 		SELECT
-		adNo,adTitle,adImg,adRegdate
+		adNo,adTitle,adImg,adRegdate,adActive
 		FROM
 		advertisement
 		WHERE adActive = '0'
 		ORDER BY adNo desc
-		limit #{pagenum},#{contentnum}
+		limit #{startlist},#{listsize}
+	</select>
+	<!-- 비활성 광고 개수 -->
+	<select id="adDisableCount" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM
+		advertisement
+		WHERE adActive = '0'
 	</select>
 	<!-- 광고등록 -->
 	<insert id="insertAd" parameterType="AdmanageDTO">
@@ -102,32 +113,20 @@
 			adChgdate = now()
 		WHERE adNo = #{adNo}
 	</update>
-	<!-- 광고 검 -->
+	<!-- 광고 검색 -->
 	<select id="getAdSearchList" parameterType="map" resultType="AdmanageDTO">
 		SELECT
-		adNo,adTitle,adImg
+		adNo,adTitle,adImg,adRegdate,adActive
 		FROM
 		advertisement
-		WHERE adTitle LIKE CONCAT('%',#{adSearch},'%')
+		WHERE adTitle LIKE CONCAT('%',#{adSearch},'%') and adActive LIKE CONCAT('%',#{adActive},'%')
 		ORDER BY adNo desc
-		limit #{pagenum}, #{contentnum}
+		limit #{startlist}, #{listsize}
 	</select>
-	<!-- 광고노출 총 -->
-	<select id="getAdExposeList" parameterType="string" resultType="AdmanageDTO">
-	SELECT 
-		*
-	FROM
+	<!-- 광고 검색 개수 -->
+	<select id="adSearchCount" parameterType="string" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM
 		advertisement
-	WHERE
-		adActive = #{adActive}
+		WHERE adTitle LIKE CONCAT('%',#{adSearch},'%')
 	</select>
-	<!-- 메인 광고 1개노출 카운트  -->
-	<update id="updateMainAdExposeCountUp" parameterType="string">
-	UPDATE
-		advertisement 
-	SET 
-		adEnable = adEnable-1
-	WHERE 
-		adNo = #{adNo}
-	</update>
 </mapper>

@@ -114,9 +114,9 @@ public class CommentService implements ICommentService{
 		return commentMapper.recommentUpd(rDTO);
 	}
 
-	/*
-	 * @Override public String getContent(CommentDTO cDTO) throws Exception { return
-	 * commentMapper.getContent(cDTO); }
-	 */
+	@Override
+	public String getProfileImg(String commentWriter) throws Exception {
+		return commentMapper.getProfileImg(commentWriter);
+	}
 
 }

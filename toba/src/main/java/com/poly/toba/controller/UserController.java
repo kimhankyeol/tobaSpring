@@ -1,17 +1,31 @@
 package com.poly.toba.controller;
 
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.bind.DatatypeConverter;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +35,7 @@ import com.poly.toba.model.UserDTO;
 import com.poly.toba.service.impl.IUserService;
 import com.poly.toba.util.Email;
 import com.poly.toba.util.EmailSender;
+import com.poly.toba.util.MakeThumbnail;
 import com.poly.toba.util.SecurityUtil;
 import com.poly.toba.util.TempKey;
 @SpringBootApplication
@@ -163,5 +178,87 @@ public class UserController {
 			return new ResponseEntity<String>(HttpStatus.OK);
 		}
 	}
-	
+	@CrossOrigin(origins="*")
+	@PutMapping("/changeNick")
+	public ResponseEntity<String> changeNick(@RequestBody UserDTO uDTO) throws Exception {
+		String nickname = uDTO.getUserNickName();
+		uDTO.setUserNickName(nickname);
+		userService.changeNick(uDTO);
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+	@CrossOrigin(origins="*")
+	@PutMapping("/profileUpd")
+	public ResponseEntity<String> profileUpd(@RequestBody UserDTO uDTO) throws Exception {
+		System.out.println("프사 넣어");
+		String path = "/usr/local/tomcat/webapps/ROOT/imageUpload/user/";
+		String newFileName = "";
+		String thumbFileName = "";
+		String extension = "";
+		UUID uid = UUID.randomUUID();
+		String now = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+		String year = now.substring(0,4);
+		String month = now.substring(4,6);
+		String day = now.substring(6,8);
+		String hour = now.substring(8,10);
+		String contentBase64 = uDTO.getUserProfilePath();
+		String oldSrc = "";
+		String newSrc = "";
+		
+		String[] strings = contentBase64.toString().split(",");
+		switch (strings[0]) {
+		case "data:image/jpeg;base64":
+			extension = "jpeg";
+			break;
+		case "data:image/png;base64":
+			extension = "png";
+			break;
+		case "data:image/gif;base64":
+			extension = "gif";
+			break;
+		default:
+			extension = "jpg";
+			break;
+		} 
+		byte[] data = DatatypeConverter.parseBase64Binary(strings[1]);
+		newFileName = path + year + "/" + month + "/" + day + "/" + hour + "/userNo/" + uDTO.getUserNo() + "/"
+					+ uid + now + uDTO.getUserNo() + "." + extension;
+		System.out.println("newFileName : " + newFileName);
+		thumbFileName = uid + now + uDTO.getUserNo();
+		System.out.println("thumbFileName : " + thumbFileName);
+		File filePath = new File(path + year + "/" + month + "/" + day + "/" + hour +
+						"/userNo/" + uDTO.getUserNo() + "/");
+		File lowPath = new File(path + year + "/" + month + "/" + day + "/" + hour +
+				"/userNo/" + uDTO.getUserNo());
+		System.out.println("filePath : " + filePath);
+		if (!filePath.isDirectory()) {
+			filePath.mkdirs();
+		} else {
+			lowPath.delete();
+			filePath.mkdirs();
+		}
+		File file = new File(newFileName);
+		System.out.println("file : " + file);
+		try(OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))){
+			outputStream.write(data);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		newSrc = "http://15.164.160.236:8080/imageUpload/user/" + year + "/" + month + "/" + day + "/" + hour + 
+				 "/userNo/" + uDTO.getUserNo() + "/" + "profile_" + uid + now + uDTO.getUserNo() + "." + extension;
+		System.out.println("newSrc : " + newSrc);
+		String thumbnailPath = MakeThumbnail.makeThumnailProfile(path, newFileName, thumbFileName, extension, year, month, day, hour, uDTO.getUserNo());
+		System.out.println("thumbnailPath : " + thumbnailPath);
+		
+		uDTO.setUserProfilePath(newSrc);
+		userService.profileUpd(uDTO);
+		File delOrin = new File(newFileName);
+		delOrin.delete();
+		
+		newFileName = "";
+		thumbFileName = "";
+		thumbnailPath = "";
+		newSrc = "";
+		contentBase64 = "";
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
 }

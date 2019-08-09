@@ -69,17 +69,19 @@ public class AdmanageService implements IAdmanageService<AdmanageDTO>{
 	public List<AdmanageDTO> getAdSearchList(HashMap<String, Object> hMap) throws Exception {
 		return admanageMapper.getAdSearchList(hMap);
 	}
-	//광고 노출 리스트 
+	// 노출 광고 개수
 	@Override
-	public List<AdmanageDTO> getAdExposeList(String adActive) throws Exception {
-		// TODO Auto-generated method stub
-		return admanageMapper.getAdExposeList(adActive);
+	public int adEnableCount() throws Exception {
+		return admanageMapper.adEnableCount();
 	}
-	//메인 광고 1개 노출 카운트
+	// 비활성 광고 개수
 	@Override
-	public int updateMainAdExposeCountUp(String adNo) throws Exception {
-		// TODO Auto-generated method stub
-		return admanageMapper.updateMainAdExposeCountUp(adNo);
+	public int adDisableCount() throws Exception {
+		return admanageMapper.adDisableCount();
 	}
-	
+	// 광고 검색 개수
+	@Override
+	public int adSearchCount(String adSearch) throws Exception {
+		return admanageMapper.adSearchCount(adSearch);
+	}
 }

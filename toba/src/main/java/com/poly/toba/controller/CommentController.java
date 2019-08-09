@@ -60,6 +60,7 @@ public class CommentController {
 		hMap.put("noticeNo", cDTO.getNoticeNo());
 		cList = commentService.getCommentList(hMap);
 		System.out.println(cList);
+		
 		// 좋아요 개수
 		List<String> cLikeList = new ArrayList<>();
 		List<CommentDTO> cLikeCountList = new ArrayList<>();
@@ -80,7 +81,6 @@ public class CommentController {
 			cLikeCountList = commentService.pagingLikeCnt(hMap);
 			hMap.put("cLikeCountList", cLikeCountList);
 		}
-
 		return new ResponseEntity<HashMap<String, Object>>(hMap, HttpStatus.OK);
 	}
 

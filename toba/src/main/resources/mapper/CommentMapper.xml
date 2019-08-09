@@ -3,12 +3,10 @@
 <mapper namespace="com.poly.toba.mapper.CommentMapper">
 	<select id="getCommentList" parameterType="map"
 		resultType="CommentDTO">
-		SELECT
-		*
-		FROM
-		comment
-		WHERE
-		noticeNo = #{noticeNo}
+		SELECT *
+		FROM comment c INNER JOIN user u
+		ON c.commentWriter=u.userNickName
+		WHERE noticeNo = #{noticeNo}
 		ORDER BY commentNo desc
 		limit #{pagenum},#{contentnum}
 	</select>
@@ -51,12 +49,10 @@
 	</select>
 	<select id="getRecommentList" parameterType="map"
 		resultType="RecommentDTO">
-		SELECT
-		*
-		FROM
-		recomment
-		WHERE
-		noticeNo = #{noticeNo} and commentNo = #{commentno}
+		SELECT *
+		FROM recomment re INNER JOIN user u
+		ON re.recommentWriter=u.userNickName
+		WHERE noticeNo = #{noticeNo} and commentNo = #{commentno}
 		ORDER BY recommentNo desc
 		limit #{pagenum},#{contentnum}
 	</select>
@@ -154,6 +150,10 @@
 	</select>
 	<!-- <select id="getContent" resultType="string"> select commentContent 
 		from comment where noticeNo=#{noticeNo} and commentNo=#{commentNo} </select> -->
+	<!-- 프사 가져오기 -->
+	<select id="getProfileImg" resultType="string">
+		select userProfilePath from user where userNickName=#{commentWriter}; 
+	</select>
 	<update id="commentUpd" parameterType="CommentDTO">
 		update comment
 		set commentContent=#{commentContent}

@@ -48,4 +48,6 @@ public interface CommentMapper {
 	public int commentUpd(CommentDTO cDTO) throws Exception;
 
 	public int recommentUpd(RecommentDTO rDTO) throws Exception;
+
+	public String getProfileImg(String commentWriter) throws Exception;
 }

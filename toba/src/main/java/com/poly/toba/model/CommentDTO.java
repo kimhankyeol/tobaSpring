@@ -14,4 +14,5 @@ public class CommentDTO {
 	private String commentWriter;
 	private String userNo;
 	private String likeUpCnt;
+	private String userProfilePath;
 }

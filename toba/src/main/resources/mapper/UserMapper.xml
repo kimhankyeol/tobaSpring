@@ -63,7 +63,9 @@
 		userNickName AS userNickName,
 		userName AS userName,
 		userRegDate AS userRegDate,
-		enabled AS enabled
+		userProfilePath AS userProfilePath,
+		enabled AS enabled,
+		authority AS authority 
 	FROM user
 	WHERE userEmail=#{userEmail} AND userPassword=#{userPassword} AND enabled=1
 	</select>
@@ -72,6 +74,16 @@
 	UPDATE user
 	SET userPassword=#{userPassword}
 	WHERE userEmail=#{userEmail} AND enabled=1
+	</update>
+	<update id="changeNick" parameterType="UserDTO">
+	update user
+	set userNickName=#{userNickName}
+	where userNo=#{userNo}
+	</update>
+	<update id="profileUpd" parameterType="UserDTO">
+	update user
+	set userProfilePath = #{userProfilePath}
+	where userNo=#{userNo}
 	</update>
 </mapper>
 

@@ -34,10 +34,10 @@ public interface AdmanageMapper {
 	public int adEnDisable(String able, String adNo) throws Exception;
 
 	public List<AdmanageDTO> getAdSearchList(HashMap<String, Object> hMap) throws Exception;
-	
-	//광고 노출 총
-	public List<AdmanageDTO> getAdExposeList(String adActive) throws Exception;
-	
-	//메인 광고 1개 노출 카운트
-	public int updateMainAdExposeCountUp(String adNo) throws Exception;
+
+	public int adEnableCount() throws Exception;
+
+	public int adDisableCount() throws Exception;
+
+	public int adSearchCount(String adSearch) throws Exception;
 }
