@@ -37,5 +37,10 @@ public interface IAdmanageService<T> {
 	public int adDisableCount() throws Exception;
 	//검색 광고 개수
 	public int adSearchCount(String adSearch) throws Exception;
+	//광고 노출
+	public List<AdmanageDTO> getAdExposeList(String adActive) throws Exception;
+	
+	//메인 광고 1개 노출 카운트 
+	public int updateMainAdExposeCountUp(String adNo) throws Exception;
 
 }

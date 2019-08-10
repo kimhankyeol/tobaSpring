@@ -129,4 +129,23 @@
 		advertisement
 		WHERE adTitle LIKE CONCAT('%',#{adSearch},'%')
 	</select>
+	<!-- 광고노출 총 -->
+	<select id="getAdExposeList" parameterType="string" resultType="AdmanageDTO">
+	SELECT 
+		*
+	FROM
+		advertisement
+	WHERE
+		adActive = #{adActive}
+	</select>
+	<!-- 메인 광고 1개노출 카운트  -->
+	<update id="updateMainAdExposeCountUp" parameterType="string">
+	UPDATE
+		advertisement 
+	SET 
+		adEnable = adEnable-1
+	WHERE 
+		adNo = #{adNo}
+	</update>
+	
 </mapper>

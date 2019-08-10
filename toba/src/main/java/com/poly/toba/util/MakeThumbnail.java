@@ -20,20 +20,18 @@ public class MakeThumbnail {
 	private static final int IMG_WIDTH2 = 828;
 	private static final int IMG_HEIGHT2 = 150;
 
-	public static String makeThumbnail(String path, String newFileName, String thumbFileName, String extension,
-			String year, String month, String day, String hour, String noticeNo) throws Exception {
-
+	public static String makeThumbnail(String path, String newFileName, String fileName, String extension, String year,
+			String month, String day, String hour, String noticeNo) throws Exception {
+		System.out.println(newFileName);
 		BufferedImage originalImage = ImageIO.read(new File(newFileName));
 		int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
 		BufferedImage resizeImageHintJpg = resizeImageWithHint(originalImage, type);
-		File thumbFolder = new File(
-				path + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + noticeNo + "/thumbs/");
+		File thumbFolder = new File(path + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + noticeNo + "/thumbs/");
 		if (!thumbFolder.isDirectory()) {
 			thumbFolder.mkdirs();
 		}
-		String thumbName = "THUMB_" + thumbFileName + "." + extension;
-		File thumbFile = new File(
-				path + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + noticeNo + "/thumbs/" + thumbName);
+		String thumbName = "THUMB_" + fileName + "." + extension;
+		File thumbFile = new File(path + "/" + year + "/" + month + "/" + day + "/" + hour + "/" + noticeNo + "/thumbs/" + thumbName);
 		ImageIO.write(resizeImageHintJpg, "jpg", thumbFile);
 		return path + year + "/" + month + "/" + day + "/" + hour + "/" + noticeNo + "/thumbs/" + thumbName;
 
@@ -86,50 +84,53 @@ public class MakeThumbnail {
 
 		return resizedImage;
 	}
+
 	// 광고 이미지 리사이징
-		public static String adImgResize(String datatype,String data, String now) throws Exception{
-			String succes = "";
-			byte[] imageBytes = DatatypeConverter.parseBase64Binary(data);
-		    String year = now.substring(0,4);
-			String month = now.substring(4,6);
-			String day = now.substring(6,8);
-			UUID uid = UUID.randomUUID();
-			
-			String srcAdImg = "http://15.164.160.236:8080/imageUpload/ad/"+year+"/"+month+"/"+day+"/Thum_";
-			String path = "/usr/local/tomcat/webapps/ROOT/imageUpload/ad/"+year+"/"+month+"/"+day;
-			
-			String fileName = uid + now+"."+datatype;
+	public static String adImgResize(String datatype, String data, String now) throws Exception {
+		String succes = "";
+		byte[] imageBytes = DatatypeConverter.parseBase64Binary(data);
+		String year = now.substring(0, 4);
+		String month = now.substring(4, 6);
+		String day = now.substring(6, 8);
+		UUID uid = UUID.randomUUID();
 
+		String srcAdImg = "http://15.164.160.236:8080/imageUpload/ad/" + year + "/" + month + "/" + day + "/Thum_";
+		String path = "/usr/local/tomcat/webapps/ROOT/imageUpload/ad/" + year + "/" + month + "/" + day;
+
+		String fileName = uid + now + "." + datatype;
+
+		try {
+			File filePath = new File(path);
+			if (!filePath.exists()) { // 파일존재여부확인
+				filePath.mkdirs();
+			}
+			BufferedImage srcImg = ImageIO.read(new ByteArrayInputStream(imageBytes));
+
+			// 원본이미지를 높이 160px로 수정
+			BufferedImage destImg = Scalr.resize(srcImg, Scalr.Method.AUTOMATIC, Scalr.Mode.FIT_TO_HEIGHT, 60);
+			// 썸네일을 저장합니다. 이미지 이름 앞에 "Thum_" 표시
+			String thumName = path + "/Thum_" + fileName;
+			// 파일 생성
 			try {
-				File filePath = new File(path);
-		    	if(!filePath.exists()){ //파일존재여부확인
-		    		filePath.mkdirs();
-		        }
-				BufferedImage srcImg = ImageIO.read(new ByteArrayInputStream(imageBytes));
-
-				// 원본이미지를 높이 160px로 수정 
-				BufferedImage destImg = Scalr.resize(srcImg, Scalr.Method.AUTOMATIC, Scalr.Mode.FIT_TO_HEIGHT, 60);
-				// 썸네일을 저장합니다. 이미지 이름 앞에 "Thum_" 표시 
-				String thumName = path + "/Thum_" + fileName;
-				// 파일 생성
-				try {
-					File thumbFile = new File(thumName);
-					ImageIO.write(destImg, datatype, thumbFile);
-					succes = srcAdImg+fileName;
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				File thumbFile = new File(thumName);
+				ImageIO.write(destImg, datatype, thumbFile);
+				succes = srcAdImg + fileName;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return succes;
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		return succes;
+	}
+
 	public static String makeThumnailProfile(String path, String newFileName, String thumbFileName, String extension,
-											String year, String month, String day, String hour, String userNo) throws Exception {
+			String year, String month, String day, String hour, String userNo) throws Exception {
 		BufferedImage originalImage = ImageIO.read(new File(newFileName));
 		int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
 		BufferedImage resizeImageHintJpg = resizeImageWithHintProfile(originalImage, type);
-		File thumbFolder = new File(path + "/" + year + "/" + month + "/" + day + "/" + hour + "/userNo/" + userNo + "/");
+		File thumbFolder = new File(
+				path + "/" + year + "/" + month + "/" + day + "/" + hour + "/userNo/" + userNo + "/");
 		if (!thumbFolder.isDirectory()) {
 			thumbFolder.mkdirs();
 		}
@@ -139,7 +140,7 @@ public class MakeThumbnail {
 		ImageIO.write(resizeImageHintJpg, "jpg", thumbFile);
 		return path + year + "/" + month + "/" + day + "/" + hour + "/userNo/" + userNo + "/" + thumbName;
 	}
-	
+
 	private static BufferedImage resizeImageWithHintProfile(BufferedImage originalImage, int type) {
 		BufferedImage resizedImage = new BufferedImage(IMG_WIDTH2, IMG_HEIGHT2, type);
 		Graphics2D g = resizedImage.createGraphics();
