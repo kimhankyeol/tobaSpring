@@ -16,4 +16,8 @@ public class ImageBoardDTO {
    private String imageBoardNext;
    private String imageBoardReadcount;
    private String imageBoardStatus;
+   
+	 //이미지 게시판에서만 쓰이는 변수
+	 private String prevThumb;
+	 private String nextThumb;
 }

@@ -25,7 +25,7 @@ import com.poly.toba.service.impl.ICommentService;
 
 @SpringBootApplication
 @RestController
-@RequestMapping("/comments")
+@RequestMapping("/Comments")
 public class CommentController {
 	@Autowired
 	private ICommentService commentService;

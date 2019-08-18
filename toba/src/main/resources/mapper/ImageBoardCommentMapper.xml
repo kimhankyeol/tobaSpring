@@ -4,24 +4,40 @@
 	<select id="commentCount" resultType="int">
 		select count(*) from imageboardcomment where imageBoardNo=#{imageBoardNo};
 	</select>
-<!-- 	<select id="getCommentList" parameterType="map"
+	<select id="getCommentList" parameterType="map"
 		resultType="CommentDTO">
 		SELECT *
-		FROM comment c INNER JOIN user u
+		FROM imageboardcomment c INNER JOIN user u
 		ON c.commentWriter=u.userNickName
-		WHERE noticeNo = #{noticeNo}
+		WHERE imageBoardNo = #{imageBoardNo}
 		ORDER BY commentNo desc
 		limit #{pagenum},#{contentnum}
 	</select>
-	<select id="commentListTotalCount" parameterType="CommentDTO"
-		resultType="java.lang.Integer">
+	<!-- 페이징별 좋아요 개수 -->
+	<select id="pagingLikeCnt" parameterType="map"
+		resultType="CommentDTO">
+		SELECT commentNo,likeUpCnt,userNo
+		FROM(
+		SELECT commentNo,COUNT(1) likeUpCnt,userNo
+		FROM imageboardlikeup
+		GROUP BY commentNo
+		having commentNo IN
+		<foreach collection="cLikeList" item="item" index="index"
+			open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+		) v
+	</select>
+	<select id="commentListTotalCount" parameterType="CommentDTO" resultType="java.lang.Integer">
 		SELECT
 		COUNT(*)
 		FROM
-		comment
+		imageboardcomment
 		WHERE
-		noticeNo = #{noticeNo}
+		imageBoardNo = #{imageBoardNo}
 	</select>
+<!-- 	
+
 	<insert id="insertComment" parameterType="CommentDTO">
 		INSERT INTO
 		comment
@@ -132,21 +148,7 @@
 		WHERE commentNo = #{commentNo} AND noticeNo = #{noticeNo} AND likeCheck=
 		#{likeCheck}
 	</select>
-	페이징별 좋아요 개수
-	<select id="pagingLikeCnt" parameterType="map"
-		resultType="CommentDTO">
-		SELECT commentNo,likeUpCnt,userNo
-		FROM(
-		SELECT commentNo,COUNT(1) likeUpCnt,userNo
-		FROM likeup
-		GROUP BY commentNo
-		having commentNo IN
-		<foreach collection="cLikeList" item="item" index="index"
-			open="(" close=")" separator=",">
-			#{item}
-		</foreach>
-		) v
-	</select>
+	
 	댓글 개수
 	<select id="commentCount" resultType="int">
 		select count(*) from comment where noticeNo=#{noticeNo};

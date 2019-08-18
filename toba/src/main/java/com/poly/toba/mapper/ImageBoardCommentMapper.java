@@ -13,12 +13,11 @@ import com.poly.toba.model.RecommentDTO;
 @Mapper
 public interface ImageBoardCommentMapper {
 
-//	public List<CommentDTO> getCommentList(HashMap<String, Object> hMap) throws Exception;
-//
+	public List<CommentDTO> getCommentList(HashMap<String, Object> hMap);;
+
 //	public int insertComment(CommentDTO cDTO) throws Exception;
 //
-//	public int commentListTotalCount(CommentDTO cDTO) throws Exception;
-//
+	public int commentListTotalCount(CommentDTO cDTO);
 //	public int recommentListTotalCount(RecommentDTO recDTO) throws Exception;
 //
 //	public List<RecommentDTO> getRecommentList(HashMap<String, Object> hMap) throws Exception;
@@ -39,7 +38,7 @@ public interface ImageBoardCommentMapper {
 //
 //	public int likeCommentCount(LikeDTO likeDTO) throws Exception;
 //
-//	public List<CommentDTO> pagingLikeCnt(HashMap<String, Object> hMap) throws Exception;
+	public List<CommentDTO> pagingLikeCnt(HashMap<String, Object> hMap);
 //
 	public int commentCount(int imageBoardNo) throws Exception;
 //	
